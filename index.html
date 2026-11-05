@@ -112,7 +112,7 @@
     .level-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
     .level-heading strong { font-size: 15px; }
     .level-heading span { color: var(--muted); font-size: 13px; }
-    .level-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .level-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
     .level-button { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid var(--line); border-radius: 11px; background: white; font-weight: 750; cursor: pointer; }
     .level-button:hover:not(:disabled) { border-color: var(--green); }
     .level-button[aria-pressed="true"] { border-color: var(--green); background: var(--green); color: white; }
@@ -329,6 +329,7 @@
     <section class="level-picker" id="level-picker" aria-label="Nivells de la categoria" hidden>
       <div class="level-heading"><strong id="level-category-name">Nivells</strong><span id="level-progress">0 / 10 resolts</span></div>
       <div class="level-list" id="level-list"></div>
+      <button class="button" type="button" id="restart-level" data-i18n="Reinicia el nivell">Reinicia el nivell</button>
     </section>
 
     <main>
@@ -490,7 +491,6 @@
             </div>
           </form>
           <p class="extra-feedback" id="extra-feedback" aria-live="polite"></p>
-          <div class="button-row"><button class="button" type="button" id="extra-new-level">Reinicia el nivell</button></div>
         </div>
       </section>
 
@@ -1906,8 +1906,6 @@
       event.preventDefault();
       submitExtraAnswer(document.getElementById("extra-input").value);
     });
-    document.getElementById("extra-new-level").addEventListener("click", newExtraGame);
-
     function shuffleGames(previousGame = "") {
       const deck = [...selectedCategories];
       if (deck.length < 2) throw new Error("El mode aleatori necessita dues categories com a mínim.");
@@ -1976,6 +1974,10 @@
       estimation: newExtraGame,
       coordinates: newExtraGame
     };
+
+    document.getElementById("restart-level").addEventListener("click", () => {
+      gameInitializers[currentCategory]?.();
+    });
 
     currentCategory = "numbers";
     renderCategorySelection();
