@@ -1,0 +1,1996 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ee">
+  <title>El Racó dels Enigmes</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f6f4ee;
+      --card: #fffefa;
+      --ink: #252b27;
+      --muted: #777d75;
+      --green: #355d4b;
+      --green-dark: #244435;
+      --green-pale: #e8eee8;
+      --line: #e9e7df;
+      --gold: #d29d48;
+      --red: #b94d42;
+      --shadow: 0 18px 50px rgb(42 39 29 / 8%);
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 86% 5%, rgb(210 157 72 / 10%), transparent 29rem),
+        var(--paper);
+      color: var(--ink);
+      font: 16px/1.5 "Segoe UI", "Helvetica Neue", sans-serif;
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, input:focus-visible {
+      outline: 3px solid rgb(210 157 72 / 72%);
+      outline-offset: 3px;
+    }
+
+    .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    header { padding: 28px 0 12px; }
+    .header-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 750; letter-spacing: -.03em; }
+    .language-picker { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 13px; font-weight: 700; }
+    .language-picker select { min-height: 40px; padding: 7px 30px 7px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); }
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--green);
+      color: white;
+      font-size: 19px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 24px;
+      padding: 44px 0 29px;
+    }
+    .eyebrow { margin: 0 0 9px; color: var(--green); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    h1 { max-width: 680px; margin: 0; font-size: clamp(36px, 6vw, 61px); line-height: 1.02; letter-spacing: -.06em; }
+    .hero-copy { max-width: 600px; margin: 18px 0 0; color: var(--muted); font-size: 17px; }
+    .daily-badge { display: flex; align-items: center; gap: 9px; padding: 11px 15px; border: 1px solid var(--line); border-radius: 999px; background: rgb(255 254 250 / 75%); color: var(--muted); font-size: 13px; white-space: nowrap; }
+    .daily-badge span { color: var(--gold); font-size: 18px; }
+
+    .random-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin: 12px 0 20px; padding: 17px 19px; border: 1px solid #dfe6dc; border-radius: 17px; background: linear-gradient(110deg, #edf2eb, #fffefa); }
+    .random-copy { display: flex; align-items: center; gap: 12px; }
+    .random-icon { display: grid; width: 42px; height: 42px; flex: 0 0 42px; place-items: center; border-radius: 13px; background: var(--green); color: white; font-size: 21px; }
+    .random-copy strong, .random-copy small { display: block; }
+    .random-copy small { margin-top: 2px; color: var(--muted); font-size: 13px; }
+    .random-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+    #random-status { color: var(--muted); font-size: 13px; }
+    .category-settings { margin: 0 0 20px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 17px; background: var(--card); }
+    .category-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+    .category-heading h2 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
+    .category-heading p { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+    .category-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 16px; margin: 15px 0; }
+    .category-option { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 13px; cursor: pointer; }
+    .category-option input { width: 17px; height: 17px; accent-color: var(--green); }
+    .category-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .preferences-status { min-height: 20px; color: var(--muted); font-size: 13px; }
+    .game-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 12px 0 20px; }
+    .game-tab {
+      display: flex;
+      min-height: 78px;
+      align-items: center;
+      gap: 13px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--card);
+      text-align: left;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .game-tab:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgb(42 39 29 / 6%); }
+    .game-tab[aria-pressed="true"] { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
+    .game-icon { display: grid; width: 42px; height: 42px; flex: 0 0 42px; place-items: center; border-radius: 12px; background: var(--green-pale); font-size: 20px; }
+    .game-tab strong, .game-tab small { display: block; }
+    .game-tab strong { font-size: 14px; }
+    .game-tab small { margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .level-picker { margin: 0 0 20px; padding: 17px 19px; border: 1px solid var(--line); border-radius: 17px; background: var(--card); }
+    .level-picker[hidden] { display: none; }
+    .level-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+    .level-heading strong { font-size: 15px; }
+    .level-heading span { color: var(--muted); font-size: 13px; }
+    .level-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .level-button { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid var(--line); border-radius: 11px; background: white; font-weight: 750; cursor: pointer; }
+    .level-button:hover:not(:disabled) { border-color: var(--green); }
+    .level-button[aria-pressed="true"] { border-color: var(--green); background: var(--green); color: white; }
+    .level-button.completed { border-color: #c4d6c6; background: var(--green-pale); color: var(--green-dark); }
+    .level-button:disabled { opacity: .42; cursor: not-allowed; }
+
+    main { padding-bottom: 56px; }
+    .game-panel { min-height: 450px; padding: clamp(22px, 4vw, 38px); border: 1px solid var(--line); border-radius: 22px; background: var(--card); box-shadow: var(--shadow); }
+    .game-panel[hidden] { display: none; }
+    .panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+    .panel-heading h2 { margin: 0; font-size: clamp(25px, 3vw, 32px); line-height: 1.1; letter-spacing: -.04em; }
+    .panel-heading p { max-width: 620px; margin: 8px 0 0; color: var(--muted); }
+    .pill { flex: 0 0 auto; padding: 7px 11px; border-radius: 999px; background: var(--green-pale); color: var(--green-dark); font-size: 12px; font-weight: 750; }
+    .number-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 12px; }
+    .target-label { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .target { color: var(--green-dark); font-size: 35px; font-weight: 800; letter-spacing: -.04em; }
+    .number-grid { display: flex; flex-wrap: wrap; gap: 9px; min-height: 57px; }
+    .number-tile {
+      min-width: 56px;
+      padding: 12px 15px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+      font-size: 19px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+    .number-tile:hover { border-color: var(--green); }
+    .number-tile.selected { border-color: var(--green); background: var(--green-pale); box-shadow: inset 0 0 0 1px var(--green); }
+    .number-tile.result-tile { color: var(--green-dark); }
+    .number-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin-top: 16px; }
+    .operator {
+      width: 43px;
+      height: 43px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: white;
+      font-size: 21px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .operator:hover { border-color: var(--green); background: var(--green-pale); }
+    .operator:disabled { opacity: .4; cursor: not-allowed; }
+    .button {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 16px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s ease, transform .15s ease;
+    }
+    .button:hover { transform: translateY(-1px); }
+    .button.primary { border-color: var(--green); background: var(--green); color: white; }
+    .button.primary:hover { background: var(--green-dark); }
+    .button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+    .message { min-height: 25px; margin: 14px 0 0; color: var(--muted); font-size: 14px; }
+    .message.success { color: var(--green); font-weight: 750; }
+    .message.error { color: var(--red); }
+    .rule-note { margin: 18px 0 0; padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+
+    .letter-rack { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0; }
+    .letter-tile { display: grid; width: 48px; height: 52px; place-items: center; border: 1px solid var(--line); border-radius: 11px; background: white; font-size: 21px; font-weight: 800; }
+    .word-form { display: flex; flex-wrap: wrap; gap: 9px; }
+    .word-form input, .code-input { min-width: 190px; min-height: 44px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 11px; background: white; }
+    .word-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .stat { padding: 9px 12px; border-radius: 10px; background: #f5f3ed; color: var(--muted); font-size: 13px; }
+    .stat strong { color: var(--ink); }
+    .hint { margin-top: 11px; color: var(--green); font-size: 14px; font-weight: 700; }
+    .symbol-row { display: flex; flex-wrap: wrap; gap: 9px; margin: 20px 0; }
+    .symbol-button { width: 62px; height: 62px; border: 2px solid transparent; border-radius: 15px; background: var(--green-pale); font-size: 25px; cursor: pointer; }
+    .symbol-button:hover { border-color: var(--green); }
+    .pattern-display { min-height: 48px; margin: 16px 0; color: var(--green-dark); font-size: 24px; font-weight: 750; letter-spacing: .12em; }
+    .sequence { display: flex; flex-wrap: wrap; gap: 10px; margin: 25px 0; }
+    .sequence span { display: grid; min-width: 57px; height: 57px; place-items: center; border: 1px solid var(--line); border-radius: 13px; background: white; font-size: 22px; font-weight: 800; }
+    .guess-form { display: flex; flex-wrap: wrap; gap: 9px; }
+    .guess-form input { width: 150px; min-height: 44px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 11px; background: white; }
+    .choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 20px; }
+    .choice-button { min-height: 54px; padding: 12px 15px; border: 1px solid var(--line); border-radius: 12px; background: white; text-align: left; cursor: pointer; }
+    .choice-button:hover:not(:disabled) { border-color: var(--green); background: var(--green-pale); }
+    .choice-button:disabled { cursor: default; }
+    .choice-button.correct { border-color: var(--green); background: var(--green-pale); }
+    .choice-button.incorrect { border-color: #e8c1bc; background: #fae7e4; }
+    .extra-puzzle { max-width: 720px; }
+    .extra-prompt { margin: 18px 0; font-size: clamp(18px, 3vw, 23px); font-weight: 700; }
+    .extra-symbols { margin: 18px 0; color: var(--green-dark); font-size: clamp(24px, 5vw, 38px); letter-spacing: .12em; overflow-wrap: anywhere; white-space: pre-wrap; }
+    .extra-answer { display: flex; flex-wrap: wrap; gap: 9px; }
+    .extra-answer input { min-width: 160px; min-height: 44px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 11px; background: white; }
+    .extra-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .extra-feedback { min-height: 25px; margin: 14px 0 0; color: var(--muted); font-size: 14px; }
+    .extra-feedback.success { color: var(--green); font-weight: 750; }
+    .extra-feedback.error { color: var(--red); }
+
+    .sudoku-wrap { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 26px; }
+    .sudoku-grid { display: grid; width: min(100%, 396px); aspect-ratio: 1; grid-template-columns: repeat(9, 1fr); overflow: hidden; border: 2px solid var(--ink); border-radius: 8px; }
+    .sudoku-cell { width: 100%; min-width: 0; padding: 0; border: 0; border-right: 1px solid #d6d4cc; border-bottom: 1px solid #d6d4cc; border-radius: 0; background: white; text-align: center; font-size: clamp(13px, 3vw, 19px); }
+    .sudoku-cell:nth-child(3n) { border-right: 2px solid var(--ink); }
+    .sudoku-cell:nth-child(9n) { border-right: 0; }
+    .sudoku-cell:nth-child(n+19):nth-child(-n+27), .sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--ink); }
+    .sudoku-cell.given { background: #f5f3ed; color: var(--green-dark); font-weight: 800; }
+    .sudoku-cell.wrong { background: #fae7e4; color: var(--red); }
+    .sudoku-info { max-width: 300px; }
+
+    .escape-room { display: grid; grid-template-columns: 1fr minmax(220px, .75fr); gap: 30px; align-items: center; }
+    .clues { display: grid; gap: 11px; margin: 20px 0 0; padding: 0; list-style: none; counter-reset: clue; }
+    .clues li { display: flex; align-items: center; gap: 13px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    .clues li::before { display: grid; width: 28px; height: 28px; flex: 0 0 28px; place-items: center; border-radius: 50%; background: var(--green-pale); color: var(--green-dark); content: counter(clue); counter-increment: clue; font-size: 13px; font-weight: 800; }
+    .lock-card { padding: 23px; border: 1px solid var(--line); border-radius: 17px; background: #f8f6f0; text-align: center; }
+    .lock-icon { font-size: 36px; }
+    .lock-card h3 { margin: 5px 0 3px; }
+    .lock-card p { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+    .lock-form { display: flex; justify-content: center; gap: 8px; }
+    .code-input { width: 120px; min-width: 0; text-align: center; letter-spacing: .25em; font-weight: 800; }
+    footer { padding: 0 0 28px; color: var(--muted); font-size: 12px; text-align: center; }
+
+    @media (max-width: 760px) {
+      .hero { grid-template-columns: 1fr; padding-top: 33px; }
+      .daily-badge { justify-self: start; }
+      .game-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .category-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .random-actions { width: 100%; }
+      #random-status { flex: 1 1 100%; }
+      .escape-room { grid-template-columns: 1fr; }
+      .lock-card { max-width: 400px; }
+    }
+    @media (max-width: 440px) {
+      .shell { width: min(100% - 24px, 1120px); }
+      header { padding-top: 17px; }
+      .game-nav { gap: 8px; }
+      .game-tab { min-height: 72px; gap: 9px; padding: 10px; }
+      .game-icon { width: 36px; height: 36px; flex-basis: 36px; font-size: 17px; }
+      .game-tab strong { font-size: 12px; }
+      .game-tab small { font-size: 11px; }
+      .panel-heading { flex-direction: column; }
+      .game-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="header-row">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span> El Racó dels Enigmes</div>
+        <label class="language-picker" for="language-select"><span data-i18n="Idioma">Idioma</span>
+          <select id="language-select" aria-label="Idioma" disabled>
+            <option value="ca" data-i18n>Català</option>
+            <option value="en">English</option>
+            <option value="es" data-i18n>Español</option>
+          </select>
+        </label>
+      </div>
+    </header>
+
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Una pausa per al cervell</p>
+        <h1 id="page-title">Pensa, prova,<br>desxifra.</h1>
+        <p class="hero-copy">Minijocs d'enginy per jugar al teu ritme. Tria un repte i posa les neurones en marxa.</p>
+      </div>
+      <div class="daily-badge"><span aria-hidden="true">✳</span> 21 categories · cap pressa</div>
+    </section>
+
+    <section class="category-settings" aria-labelledby="category-title">
+      <div class="category-heading">
+        <div><h2 id="category-title" data-i18n="Categories del mode aleatori">Categories del mode aleatori</h2><p data-i18n="Tria com a mínim dues categories. La selecció es desa al teu navegador.">Tria com a mínim dues categories. La selecció es desa al teu navegador.</p></div>
+      </div>
+      <div class="category-list" id="category-list"></div>
+      <div class="category-actions">
+        <button class="button" type="button" id="select-all-categories" disabled data-i18n="Selecciona-les totes">Selecciona-les totes</button>
+        <button class="button primary" type="button" id="save-categories" disabled data-i18n="Desa les categories">Desa les categories</button>
+        <span class="preferences-status" id="preferences-status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="random-bar" aria-label="Mode de joc aleatori">
+      <div class="random-copy"><span class="random-icon" aria-hidden="true">⤨</span><span><strong>Mode aleatori</strong><small>Reptes de categories diferents, sense repetir fins al final.</small></span></div>
+      <div class="random-actions">
+        <span id="random-status" aria-live="polite">Tria un joc o deixa que te'l triem nosaltres.</span>
+        <button class="button primary" id="start-random" disabled>Juga aleatòriament</button>
+        <button class="button" id="next-random" hidden>Següent repte →</button>
+      </div>
+    </section>
+
+    <nav class="game-nav" aria-label="Tria un minijoc">
+      <button class="game-tab" data-panel="numbers" aria-pressed="true"><span class="game-icon" aria-hidden="true">＋</span><span><strong>El número exacte</strong><small>Operacions i càlcul</small></span></button>
+      <button class="game-tab" data-panel="letters" aria-pressed="false"><span class="game-icon" aria-hidden="true">Aa</span><span><strong>Caçaparaules</strong><small>Lletres i vocabulari</small></span></button>
+      <button class="game-tab" data-panel="sudoku" aria-pressed="false"><span class="game-icon" aria-hidden="true">▦</span><span><strong>Sudoku</strong><small>Lògica clàssica</small></span></button>
+      <button class="game-tab" data-panel="escape" aria-pressed="false"><span class="game-icon" aria-hidden="true">⌑</span><span><strong>Sala tancada</strong><small>Un codi per escapar</small></span></button>
+      <button class="game-tab" data-panel="memory" aria-pressed="false"><span class="game-icon" aria-hidden="true">◉</span><span><strong>Memòria visual</strong><small>Repeteix la seqüència</small></span></button>
+      <button class="game-tab" data-panel="sequence" aria-pressed="false"><span class="game-icon" aria-hidden="true">∴</span><span><strong>Quin ve després?</strong><small>Sèries i patrons</small></span></button>
+      <button class="game-tab" data-panel="mastermind" aria-pressed="false"><span class="game-icon" aria-hidden="true">▣</span><span><strong>Trenca el codi</strong><small>Dedueix la combinació</small></span></button>
+      <button class="game-tab" data-panel="riddles" aria-pressed="false"><span class="game-icon" aria-hidden="true">?</span><span><strong>Endevinalles</strong><small>Preguntes amb trampa</small></span></button>
+      <button class="game-tab" data-panel="arithmetic" aria-pressed="false"><span class="game-icon" aria-hidden="true">∑</span><span><strong>Càlcul mental</strong><small>Operacions llampec</small></span></button>
+      <button class="game-tab" data-panel="anagrams" aria-pressed="false"><span class="game-icon" aria-hidden="true">↔</span><span><strong>Anagrames</strong><small>Ordena les lletres</small></span></button>
+      <button class="game-tab" data-panel="oddone" aria-pressed="false"><span class="game-icon" aria-hidden="true">◈</span><span><strong>L'intrús</strong><small>Troba què no encaixa</small></span></button>
+      <button class="game-tab" data-panel="cipher" aria-pressed="false"><span class="game-icon" aria-hidden="true">⌘</span><span><strong>Xifrat secret</strong><small>Desplaça l'alfabet</small></span></button>
+      <button class="game-tab" data-panel="visualcount" aria-pressed="false"><span class="game-icon" aria-hidden="true">▤</span><span><strong>Compte visual</strong><small>Compta els símbols</small></span></button>
+      <button class="game-tab" data-panel="directions" aria-pressed="false"><span class="game-icon" aria-hidden="true">➤</span><span><strong>Rosa dels vents</strong><small>Segueix les instruccions</small></span></button>
+      <button class="game-tab" data-panel="weights" aria-pressed="false"><span class="game-icon" aria-hidden="true">⚖</span><span><strong>Balances</strong><small>Equacions de pesos</small></span></button>
+      <button class="game-tab" data-panel="calendar" aria-pressed="false"><span class="game-icon" aria-hidden="true">▦</span><span><strong>Calendari lògic</strong><small>Dies i setmanes</small></span></button>
+      <button class="game-tab" data-panel="mini-grid" aria-pressed="false"><span class="game-icon" aria-hidden="true">⊞</span><span><strong>Mini sudoku</strong><small>Graella 4 × 4</small></span></button>
+      <button class="game-tab" data-panel="shapes" aria-pressed="false"><span class="game-icon" aria-hidden="true">△</span><span><strong>Patrons visuals</strong><small>Figures i seqüències</small></span></button>
+      <button class="game-tab" data-panel="wordlogic" aria-pressed="false"><span class="game-icon" aria-hidden="true">Aa</span><span><strong>Lògica de paraules</strong><small>Pistes i deducció</small></span></button>
+      <button class="game-tab" data-panel="estimation" aria-pressed="false"><span class="game-icon" aria-hidden="true">≈</span><span><strong>Aproximació</strong><small>Estima el resultat</small></span></button>
+      <button class="game-tab" data-panel="coordinates" aria-pressed="false"><span class="game-icon" aria-hidden="true">⌖</span><span><strong>Coordenades</strong><small>Troba la casella</small></span></button>
+    </nav>
+
+    <section class="level-picker" id="level-picker" aria-label="Nivells de la categoria" hidden>
+      <div class="level-heading"><strong id="level-category-name">Nivells</strong><span id="level-progress">0 / 10 resolts</span></div>
+      <div class="level-list" id="level-list"></div>
+    </section>
+
+    <main>
+      <section class="game-panel" id="panel-numbers" aria-labelledby="numbers-title">
+        <div class="panel-heading">
+          <div><h2 id="numbers-title">El número exacte</h2><p>Combina els nombres amb operacions per arribar al resultat. Tu tries quins fas servir.</p></div>
+          <span class="pill">CÀLCUL</span>
+        </div>
+        <div class="number-top"><span class="target-label">RESULTAT OBJECTIU</span><span class="target" id="target-number">—</span></div>
+        <div class="number-grid" id="number-grid" aria-label="Nombres disponibles"></div>
+        <div class="number-controls" aria-label="Operacions">
+          <button class="operator" data-operation="+" aria-label="Suma" disabled>+</button>
+          <button class="operator" data-operation="-" aria-label="Resta" disabled>−</button>
+          <button class="operator" data-operation="*" aria-label="Multiplicació" disabled>×</button>
+          <button class="operator" data-operation="/" aria-label="Divisió" disabled>÷</button>
+          <span class="target-label" id="selection-help">Tria dos nombres i una operació</span>
+        </div>
+        <p class="message" id="number-message" aria-live="polite"></p>
+        <div class="button-row"><button class="button primary" id="new-number-game">Nova partida</button></div>
+        <p class="rule-note">Cada operació consumeix els dos nombres triats i afegeix el resultat. Les divisions han de ser exactes i no s'admeten resultats negatius.</p>
+      </section>
+
+      <section class="game-panel" id="panel-letters" aria-labelledby="letters-title" hidden>
+        <div class="panel-heading">
+          <div><h2 id="letters-title">Caçaparaules</h2><p>Quina paraula tan llarga com puguis formar amb aquestes lletres? No cal fer-les servir totes.</p></div>
+          <span class="pill">VOCABULARI</span>
+        </div>
+        <div class="letter-rack" id="letter-rack" aria-label="Lletres disponibles"></div>
+        <form class="word-form" id="word-form">
+          <label for="word-input" class="target-label">LA TEVA PARAULA</label>
+          <input id="word-input" name="word" type="text" autocomplete="off" autocapitalize="off" maxlength="12" placeholder="Escriu una paraula" required>
+          <button class="button primary" type="submit">Comprova</button>
+          <button class="button" type="button" id="new-word-game">Noves lletres</button>
+        </form>
+        <p class="message" id="word-message" aria-live="polite"></p>
+        <div class="word-stats">
+          <div class="stat">La teva millor: <strong id="word-best">—</strong></div>
+          <div class="stat">Paraula més llarga del vocabulari: <strong id="word-hint-word">—</strong></div>
+        </div>
+        <div class="hint" id="word-hint" hidden></div>
+        <p class="rule-note">Les paraules es validen amb un petit vocabulari local de demostració. Es compten les lletres accentuades com la seva lletra base.</p>
+      </section>
+
+      <section class="game-panel" id="panel-sudoku" aria-labelledby="sudoku-title" hidden>
+        <div class="panel-heading">
+          <div><h2 id="sudoku-title">Sudoku</h2><p>Completa la graella: cada fila, columna i quadrat de 3 × 3 ha de contenir de l'1 al 9.</p></div>
+          <span class="pill">LÒGICA</span>
+        </div>
+        <div class="sudoku-wrap">
+          <div class="sudoku-grid" id="sudoku-grid" role="group" aria-label="Graella de sudoku"></div>
+          <div class="sudoku-info">
+            <p class="target-label">Una graella per començar; les caselles en verd són pistes fixes.</p>
+            <p class="message" id="sudoku-message" aria-live="polite"></p>
+            <div class="button-row"><button class="button primary" id="check-sudoku">Comprova</button><button class="button" id="reset-sudoku">Reinicia</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="game-panel" id="panel-escape" aria-labelledby="escape-title" hidden>
+        <div class="panel-heading">
+          <div><h2 id="escape-title">La sala tancada</h2><p>La porta només s'obre amb un codi de tres xifres. Llegeix les pistes en ordre.</p></div>
+          <span class="pill">ESCAPE</span>
+        </div>
+        <div class="escape-room">
+          <div>
+            <p class="target-label">TRES PISTES, TRES XIFRES</p>
+            <ol class="clues" id="escape-clues"></ol>
+          </div>
+          <div class="lock-card">
+            <div class="lock-icon" id="lock-icon" aria-hidden="true">🔒</div>
+            <h3 id="lock-title">El pany electrònic</h3>
+            <p id="lock-copy">Introdueix les tres xifres en ordre.</p>
+            <form class="lock-form" id="code-form">
+              <label for="code-input" hidden>Codi de tres xifres</label>
+              <input class="code-input" id="code-input" type="text" inputmode="numeric" pattern="[0-9]{3}" maxlength="3" placeholder="···" required>
+              <button class="button primary" type="submit">Prova</button>
+            </form>
+            <p class="message" id="code-message" aria-live="polite"></p>
+            <button class="button" id="reset-escape" type="button" hidden>Torna-ho a provar</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="game-panel" id="panel-memory" aria-labelledby="memory-title" hidden>
+        <div class="panel-heading">
+          <div><h2 id="memory-title">Memòria visual</h2><p>Observa la seqüència de símbols i repeteix-la en el mateix ordre.</p></div>
+          <span class="pill">MEMÒRIA</span>
+        </div>
+        <p class="target-label">SEQÜÈNCIA</p>
+        <div class="pattern-display" id="memory-display" aria-live="polite">Prem «Mostra la seqüència» per començar.</div>
+        <div class="symbol-row" id="memory-buttons" aria-label="Tria el símbol següent">
+          <button class="symbol-button" data-symbol="0" aria-label="Lluna">🌙</button>
+          <button class="symbol-button" data-symbol="1" aria-label="Sol">☀️</button>
+          <button class="symbol-button" data-symbol="2" aria-label="Estrella">⭐</button>
+          <button class="symbol-button" data-symbol="3" aria-label="Núvol">☁️</button>
+        </div>
+        <p class="message" id="memory-message" aria-live="polite"></p>
+        <div class="button-row"><button class="button primary" id="start-memory">Mostra la seqüència</button></div>
+      </section>
+
+      <section class="game-panel" id="panel-sequence" aria-labelledby="sequence-title" hidden>
+        <div class="panel-heading">
+          <div><h2 id="sequence-title">Quin ve després?</h2><p>Troba la regla de la sèrie i escriu el nombre que falta.</p></div>
+          <span class="pill">PATRONS</span>
+        </div>
+        <p class="target-label">COMPLETA LA SÈRIE</p>
+        <div class="sequence" id="sequence-items" aria-label="Sèrie numèrica"></div>
+        <form class="guess-form" id="sequence-form">
+          <label for="sequence-answer" class="target-label">EL SEGÜENT NOMBRE</label>
+          <input id="sequence-answer" type="number" step="1" placeholder="?" required>
+          <button class="button primary" type="submit">Comprova</button>
+          <button class="button" type="button" id="new-sequence">Una altra sèrie</button>
+        </form>
+        <p class="message" id="sequence-message" aria-live="polite"></p>
+      </section>
+
+      <section class="game-panel" id="panel-mastermind" aria-labelledby="mastermind-title" hidden>
+        <div class="panel-heading">
+          <div><h2 id="mastermind-title">Trenca el codi</h2><p>Dedueix el codi secret de quatre xifres. Després de cada intent sabràs quantes xifres són al lloc correcte o en un altre lloc.</p></div>
+          <span class="pill">DEDUCCIÓ</span>
+        </div>
+        <p class="target-label" id="mastermind-turns">Tens 8 intents. El codi conté quatre xifres diferents de l'1 al 6.</p>
+        <form class="guess-form" id="mastermind-form">
+          <label for="mastermind-input" class="target-label">EL TEU INTENT</label>
+          <input id="mastermind-input" type="text" inputmode="numeric" pattern="[1-9]{4}" maxlength="4" placeholder="1 2 3 4" required>
+          <button class="button primary" type="submit">Prova el codi</button>
+          <button class="button" type="button" id="new-mastermind">Nou codi</button>
+        </form>
+        <p class="message" id="mastermind-message" aria-live="polite"></p>
+        <ol class="clues" id="mastermind-history" aria-label="Historial d'intents"></ol>
+      </section>
+
+      <section class="game-panel" id="panel-riddles" aria-labelledby="riddles-title" hidden>
+        <div class="panel-heading">
+          <div><h2 id="riddles-title">Endevinalles</h2><p>Llegeix bé: de vegades la resposta és més senzilla del que sembla.</p></div>
+          <span class="pill">ENIGMES</span>
+        </div>
+        <p class="target-label" id="riddle-count">Endevinalla 1</p>
+        <h3 id="riddle-question"></h3>
+        <div class="choice-grid" id="riddle-choices"></div>
+        <p class="message" id="riddle-message" aria-live="polite"></p>
+        <div class="button-row"><button class="button primary" id="next-riddle">Una altra endevinalla</button></div>
+      </section>
+
+      <section class="game-panel" id="panel-extra" aria-labelledby="extra-title" hidden>
+        <div class="panel-heading">
+          <div><h2 id="extra-title">Repte</h2><p id="extra-description"></p></div>
+          <span class="pill" id="extra-category-pill">REPTE</span>
+        </div>
+        <div class="extra-puzzle">
+          <p class="target-label" id="extra-level-label"></p>
+          <p class="extra-prompt" id="extra-prompt"></p>
+          <div class="extra-symbols" id="extra-symbols" hidden></div>
+          <form id="extra-form">
+            <div class="extra-options" id="extra-options"></div>
+            <div class="extra-answer" id="extra-answer">
+              <input id="extra-input" autocomplete="off" required>
+              <button class="button primary" type="submit" data-i18n="Comprova">Comprova</button>
+            </div>
+          </form>
+          <p class="extra-feedback" id="extra-feedback" aria-live="polite"></p>
+          <div class="button-row"><button class="button" type="button" id="extra-new-level">Reinicia el nivell</button></div>
+        </div>
+      </section>
+
+    </main>
+    <footer>Fet per jugar una estona. No cal instal·lar res: funciona localment al teu navegador.</footer>
+  </div>
+
+  <script>
+    "use strict";
+
+    const translationRows = [
+      ["El Racó dels Enigmes", "The Puzzle Corner", "El Rincón de los Enigmas"],
+      ["Càlcul mental", "Mental maths", "Cálculo mental"],
+      ["Operacions llampec", "Quick-fire arithmetic", "Operaciones relámpago"],
+      ["Anagrames", "Anagrams", "Anagramas"],
+      ["Ordena les lletres", "Rearrange the letters", "Ordena las letras"],
+      ["L'intrús", "Odd one out", "El intruso"],
+      ["Troba què no encaixa", "Find what doesn't fit", "Encuentra qué no encaja"],
+      ["Xifrat secret", "Secret cipher", "Cifrado secreto"],
+      ["Desplaça l'alfabet", "Shift the alphabet", "Desplaza el alfabeto"],
+      ["Compte visual", "Visual counting", "Conteo visual"],
+      ["Compta els símbols", "Count the symbols", "Cuenta los símbolos"],
+      ["Rosa dels vents", "Compass challenge", "Rosa de los vientos"],
+      ["Segueix les instruccions", "Follow the directions", "Sigue las instrucciones"],
+      ["Balances", "Balancing scales", "Básculas"],
+      ["Equacions de pesos", "Weight equations", "Ecuaciones de pesos"],
+      ["Calendari lògic", "Calendar logic", "Lógica del calendario"],
+      ["Dies i setmanes", "Days and weeks", "Días y semanas"],
+      ["Mini sudoku", "Mini sudoku", "Mini sudoku"],
+      ["Graella 4 × 4", "4 × 4 grid", "Cuadrícula 4 × 4"],
+      ["Patrons visuals", "Visual patterns", "Patrones visuales"],
+      ["Figures i seqüències", "Shapes and sequences", "Figuras y secuencias"],
+      ["Lògica de paraules", "Word logic", "Lógica de palabras"],
+      ["Pistes i deducció", "Clues and deduction", "Pistas y deducción"],
+      ["Aproximació", "Estimation", "Aproximación"],
+      ["Estima el resultat", "Estimate the result", "Estima el resultado"],
+      ["Coordenades", "Coordinates", "Coordenadas"],
+      ["Troba la casella", "Find the square", "Encuentra la casilla"],
+      ["Nivells", "Levels", "Niveles"],
+      ["resolts", "completed", "resueltos"],
+      ["Nivell", "Level", "Nivel"],
+      ["Desbloquejat", "Unlocked", "Desbloqueado"],
+      ["Bloquejat", "Locked", "Bloqueado"],
+      ["Resolts", "Completed", "Resueltos"],
+      ["Reinicia el nivell", "Restart level", "Reiniciar nivel"],
+      ["Selecciona un nivell per començar.", "Select a level to begin.", "Selecciona un nivel para empezar."],
+      ["Repte", "Challenge", "Reto"],
+      ["Correcte! Nivell completat.", "Correct! Level completed.", "¡Correcto! Nivel completado."],
+      ["Resposta incorrecta. Torna-ho a provar.", "Incorrect answer. Try again.", "Respuesta incorrecta. Inténtalo de nuevo."],
+      ["Has completat tots els nivells d'aquesta categoria!", "You've completed all levels in this category!", "¡Has completado todos los niveles de esta categoría!"],
+      ["Enhorabona! Has completat el nivell.", "Well done! You completed the level.", "¡Enhorabuena! Has completado el nivel."],
+      ["Escriu la resposta", "Enter your answer", "Escribe la respuesta"],
+      ["No s'ha pogut desar el progrés.", "Could not save your progress.", "No se pudo guardar tu progreso."],
+      ["Resolts", "Completed", "Resueltos"],
+      ["La sala tancada", "The locked room", "La habitación cerrada"],
+      ["Mode de joc aleatori", "Random game mode", "Modo de juego aleatorio"],
+      ["Tria un minijoc", "Choose a mini-game", "Elige un minijuego"],
+      ["Una pausa per al cervell", "A break for your brain", "Un descanso para el cerebro"],
+      ["Pensa, prova,", "Think, try,", "Piensa, prueba,"],
+      ["desxifra.", "and solve.", "y descifra."],
+      ["Minijocs d'enginy per jugar al teu ritme. Tria un repte i posa les neurones en marxa.", "Brain-teasing mini-games to play at your own pace. Pick a challenge and get thinking.", "Minijuegos de ingenio para jugar a tu ritmo. Elige un reto y pon las neuronas en marcha."],
+      ["21 categories · cap pressa", "21 categories · no rush", "21 categorías · sin prisa"],
+      ["Idioma", "Language", "Idioma"],
+      ["Categories del mode aleatori", "Random mode categories", "Categorías del modo aleatorio"],
+      ["Tria com a mínim dues categories. La selecció es desa al teu navegador.", "Choose at least two categories. Your selection is saved in this browser.", "Elige al menos dos categorías. La selección se guarda en este navegador."],
+      ["Selecciona-les totes", "Select all", "Seleccionarlas todas"],
+      ["Desa les categories", "Save categories", "Guardar categorías"],
+      ["Mode aleatori", "Random mode", "Modo aleatorio"],
+      ["Reptes de categories diferents, sense repetir fins al final.", "Challenges from different categories, with no repeats until the round ends.", "Retos de distintas categorías, sin repetir hasta terminar la ronda."],
+      ["Tria un joc o deixa que te'l triem nosaltres.", "Pick a game or let us choose one for you.", "Elige un juego o deja que elijamos uno por ti."],
+      ["Juga aleatòriament", "Play randomly", "Jugar al azar"],
+      ["Següent repte →", "Next challenge →", "Siguiente reto →"],
+      ["Tria un minijoc", "Choose a mini-game", "Elige un minijuego"],
+      ["El número exacte", "The exact number", "El número exacto"],
+      ["Operacions i càlcul", "Math & operations", "Operaciones y cálculo"],
+      ["Caçaparaules", "Word hunt", "Cazapalabras"],
+      ["Lletres i vocabulari", "Letters & vocabulary", "Letras y vocabulario"],
+      ["Lògica clàssica", "Classic logic", "Lógica clásica"],
+      ["Sala tancada", "Locked room", "Habitación cerrada"],
+      ["Un codi per escapar", "Crack the escape code", "Un código para escapar"],
+      ["Memòria visual", "Visual memory", "Memoria visual"],
+      ["Repeteix la seqüència", "Repeat the sequence", "Repite la secuencia"],
+      ["Quin ve després?", "What comes next?", "¿Qué viene después?"],
+      ["Sèries i patrons", "Sequences & patterns", "Series y patrones"],
+      ["Trenca el codi", "Crack the code", "Descifra el código"],
+      ["Dedueix la combinació", "Deduce the combination", "Deduce la combinación"],
+      ["Endevinalles", "Riddles", "Acertijos"],
+      ["Preguntes amb trampa", "Trick questions", "Preguntas con truco"],
+      ["Combina els nombres amb operacions per arribar al resultat. Tu tries quins fas servir.", "Combine numbers with operations to reach the target. You choose which ones to use.", "Combina números con operaciones para llegar al resultado. Tú eliges cuáles usar."],
+      ["CÀLCUL", "MATH", "CÁLCULO"],
+      ["RESULTAT OBJECTIU", "TARGET NUMBER", "NÚMERO OBJETIVO"],
+      ["Nombres disponibles", "Available numbers", "Números disponibles"],
+      ["Operacions", "Operations", "Operaciones"],
+      ["Suma", "Add", "Sumar"],
+      ["Resta", "Subtract", "Restar"],
+      ["Multiplicació", "Multiply", "Multiplicar"],
+      ["Divisió", "Divide", "Dividir"],
+      ["Tria dos nombres i una operació", "Choose two numbers and an operation", "Elige dos números y una operación"],
+      ["Ara tria una operació", "Now choose an operation", "Ahora elige una operación"],
+      ["Pista: el resultat sempre es pot assolir amb els quatre primers nombres.", "Hint: the target can always be reached using the first four numbers.", "Pista: siempre puedes alcanzar el resultado con los cuatro primeros números."],
+      ["Nova partida", "New game", "Nueva partida"],
+      ["Cada operació consumeix els dos nombres triats i afegeix el resultat. Les divisions han de ser exactes i no s'admeten resultats negatius.", "Each operation uses the two selected numbers and adds the result. Division must be exact; negative results are not allowed.", "Cada operación consume los dos números elegidos y añade el resultado. Las divisiones deben ser exactas y no se permiten resultados negativos."],
+      ["VOCABULARI", "WORDS", "VOCABULARIO"],
+      ["Quina paraula tan llarga com puguis formar amb aquestes lletres? No cal fer-les servir totes.", "How long a word can you make from these letters? You don't have to use them all.", "¿Qué palabra tan larga como puedas formar con estas letras? No hace falta usarlas todas."],
+      ["Lletres disponibles", "Available letters", "Letras disponibles"],
+      ["LA TEVA PARAULA", "YOUR WORD", "TU PALABRA"],
+      ["Escriu una paraula", "Enter a word", "Escribe una palabra"],
+      ["Comprova", "Check", "Comprobar"],
+      ["Noves lletres", "New letters", "Nuevas letras"],
+      ["La teva millor:", "Your best:", "Tu mejor:"],
+      ["Paraula més llarga del vocabulari:", "Longest word in the dictionary:", "Palabra más larga del vocabulario:"],
+      ["Les paraules es validen amb un petit vocabulari local de demostració. Es compten les lletres accentuades com la seva lletra base.", "Words are checked against a small built-in sample dictionary. Accented letters count as their base letter.", "Las palabras se comprueban con un pequeño vocabulario local de muestra. Las letras acentuadas cuentan como su letra base."],
+      ["LÒGICA", "LOGIC", "LÓGICA"],
+      ["Completa la graella: cada fila, columna i quadrat de 3 × 3 ha de contenir de l'1 al 9.", "Complete the grid: every row, column, and 3 × 3 box must contain the numbers 1 to 9.", "Completa la cuadrícula: cada fila, columna y cuadro de 3 × 3 debe contener del 1 al 9."],
+      ["Graella de sudoku", "Sudoku grid", "Cuadrícula de sudoku"],
+      ["Una graella per començar; les caselles en verd són pistes fixes.", "A puzzle to get started; the green cells are fixed clues.", "Un tablero para empezar; las casillas verdes son pistas fijas."],
+      ["Reinicia", "Reset", "Reiniciar"],
+      ["ESCAPE", "ESCAPE ROOM", "ESCAPE ROOM"],
+      ["La porta només s'obre amb un codi de tres xifres. Llegeix les pistes en ordre.", "The door opens with a three-digit code. Read the clues in order.", "La puerta solo se abre con un código de tres cifras. Lee las pistas en orden."],
+      ["TRES PISTES, TRES XIFRES", "THREE CLUES, THREE DIGITS", "TRES PISTAS, TRES CIFRAS"],
+      ["El pany electrònic", "The electronic lock", "La cerradura electrónica"],
+      ["Introdueix les tres xifres en ordre.", "Enter the three digits in order.", "Introduce las tres cifras en orden."],
+      ["Codi de tres xifres", "Three-digit code", "Código de tres cifras"],
+      ["Prova", "Try", "Probar"],
+      ["Torna-ho a provar", "Try again", "Volver a intentarlo"],
+      ["MEMÒRIA", "MEMORY", "MEMORIA"],
+      ["Observa la seqüència de símbols i repeteix-la en el mateix ordre.", "Watch the sequence of symbols and repeat them in the same order.", "Observa la secuencia de símbolos y repítela en el mismo orden."],
+      ["SEQÜÈNCIA", "SEQUENCE", "SECUENCIA"],
+      ["Prem «Mostra la seqüència» per començar.", "Press “Show the sequence” to begin.", "Pulsa «Mostrar la secuencia» para empezar."],
+      ["Tria el símbol següent", "Choose the next symbol", "Elige el siguiente símbolo"],
+      ["Lluna", "Moon", "Luna"],
+      ["Sol", "Sun", "Sol"],
+      ["Estrella", "Star", "Estrella"],
+      ["Núvol", "Cloud", "Nube"],
+      ["Mostra la seqüència", "Show the sequence", "Mostrar la secuencia"],
+      ["PATRONS", "PATTERNS", "PATRONES"],
+      ["Troba la regla de la sèrie i escriu el nombre que falta.", "Find the pattern and enter the missing number.", "Encuentra la regla de la serie y escribe el número que falta."],
+      ["COMPLETA LA SÈRIE", "COMPLETE THE SEQUENCE", "COMPLETA LA SERIE"],
+      ["EL SEGÜENT NOMBRE", "NEXT NUMBER", "SIGUIENTE NÚMERO"],
+      ["Una altra sèrie", "Another sequence", "Otra serie"],
+      ["DEDUCCIÓ", "DEDUCTION", "DEDUCCIÓN"],
+      ["Dedueix el codi secret de quatre xifres. Després de cada intent sabràs quantes xifres són al lloc correcte o en un altre lloc.", "Deduce the four-digit secret code. After each guess, you'll learn how many digits are in the right place or elsewhere.", "Deduce el código secreto de cuatro cifras. Tras cada intento sabrás cuántas cifras están en el sitio correcto o en otro lugar."],
+      ["Tens 8 intents. El codi conté quatre xifres diferents de l'1 al 6.", "You have 8 tries. The code contains four different digits from 1 to 6.", "Tienes 8 intentos. El código contiene cuatro cifras distintas del 1 al 6."],
+      ["EL TEU INTENT", "YOUR GUESS", "TU INTENTO"],
+      ["Prova el codi", "Guess the code", "Probar el código"],
+      ["Nou codi", "New code", "Nuevo código"],
+      ["Historial d'intents", "Guess history", "Historial de intentos"],
+      ["ENIGMES", "RIDDLES", "ACERTIJOS"],
+      ["Llegeix bé: de vegades la resposta és més senzilla del que sembla.", "Read carefully: sometimes the answer is simpler than it seems.", "Lee con atención: a veces la respuesta es más sencilla de lo que parece."],
+      ["Una altra endevinalla", "Another riddle", "Otro acertijo"],
+      ["Fet per jugar una estona. No cal instal·lar res: funciona localment al teu navegador.", "Made for a little brain break. No installation needed; it runs locally in your browser.", "Hecho para jugar un rato. No hace falta instalar nada: funciona localmente en tu navegador."],
+      ["Quantes cantonades té una habitació rectangular?", "How many corners does a rectangular room have?", "¿Cuántas esquinas tiene una habitación rectangular?"],
+      ["Quantes vegades apareix la lletra «a» a «casa»?", "How many times does the letter “a” appear in “casa”?", "¿Cuántas veces aparece la letra «a» en «casa»?"],
+      ["Quantes potes té una aranya?", "How many legs does a spider have?", "¿Cuántas patas tiene una araña?"],
+      ["Quantes potes té una cadira de quatre potes?", "How many legs does a four-legged chair have?", "¿Cuántas patas tiene una silla de cuatro patas?"],
+      ["Quants dies té una setmana?", "How many days are in a week?", "¿Cuántos días tiene una semana?"],
+      ["Quants costats té un triangle?", "How many sides does a triangle have?", "¿Cuántos lados tiene un triángulo?"],
+      ["Quants sentits se solen ensenyar a l'escola?", "How many senses are commonly taught at school?", "¿Cuántos sentidos se suelen enseñar en la escuela?"],
+      ["Quantes rodes té una bicicleta?", "How many wheels does a bicycle have?", "¿Cuántas ruedas tiene una bicicleta?"],
+      ["Molt bé! Paraula registrada.", "Great! Word accepted.", "¡Muy bien! Palabra registrada."],
+      ["Exacte! Has trobat el resultat. Vols provar-ne un altre?", "Exact! You found the target. Want to try another?", "¡Exacto! Has encontrado el resultado. ¿Quieres probar otro?"],
+      ["Aquesta divisió no és exacta. Prova una altra operació.", "That division is not exact. Try another operation.", "Esa división no es exacta. Prueba otra operación."],
+      ["Codi correcte.", "Correct code.", "Código correcto."],
+      ["El pany no s'obre. Repassa les pistes i torna-ho a provar.", "The lock stays shut. Review the clues and try again.", "La cerradura no se abre. Repasa las pistas y vuelve a intentarlo."],
+      ["Has escapat!", "You escaped!", "¡Has escapado!"],
+      ["Les pistes eren la clau. Ben jugat!", "The clues were the key. Well played!", "Las pistas eran la clave. ¡Bien jugado!"],
+      ["Prem «Mostra la seqüència» per començar.", "Press “Show the sequence” to begin.", "Pulsa «Mostrar la secuencia» para empezar."],
+      ["Memoritza-la...", "Memorize it...", "Memorízala..."],
+      ["Ara repeteix-la!", "Now repeat it!", "¡Ahora repítela!"],
+      ["Tria els símbols en el mateix ordre.", "Choose the symbols in the same order.", "Elige los símbolos en el mismo orden."],
+      ["No era aquesta. Torna a mirar la seqüència!", "Not that one. Watch the sequence again!", "No era esa. ¡Vuelve a mirar la secuencia!"],
+      ["Memòria d'elefant! Seqüència completada.", "Amazing memory! Sequence complete.", "¡Memoria de elefante! Secuencia completada."],
+      ["Suma 2 cada vegada.", "Add 2 each time.", "Suma 2 cada vez."],
+      ["Cada nombre es duplica.", "Each number doubles.", "Cada número se duplica."],
+      ["Són quadrats perfectes.", "They are perfect squares.", "Son cuadrados perfectos."],
+      ["Resta 3 cada vegada.", "Subtract 3 each time.", "Resta 3 cada vez."],
+      ["Cada terme suma els dos anteriors.", "Each term is the sum of the two before it.", "Cada término suma los dos anteriores."],
+      ["Suma 3, després 5, després 7...", "Add 3, then 5, then 7...", "Suma 3, luego 5, luego 7..."],
+      ["Divideix entre 3.", "Divide by 3.", "Divide entre 3."],
+      ["Correcte! ", "Correct! ", "¡Correcto! "],
+      ["Encara no. Busca el patró que relaciona els nombres.", "Not quite. Look for the pattern connecting the numbers.", "Aún no. Busca el patrón que relaciona los números."],
+      ["Escriu quatre xifres diferents, de l'1 al 6.", "Enter four different digits from 1 to 6.", "Escribe cuatro cifras distintas, del 1 al 6."],
+      ["Pista afegida a l'historial.", "Clue added to the history.", "Pista añadida al historial."],
+      ["Exacte! Ben vist.", "Exactly! Well spotted.", "¡Exacto! Bien visto."],
+      ["Tria un joc o deixa que te'l triem nosaltres.", "Pick a game or let us choose one for you.", "Elige un juego o deja que elijamos uno por ti."],
+      ["La selecció ha de tenir com a mínim dues categories.", "Choose at least two categories.", "Selecciona al menos dos categorías."],
+      ["Categories desades.", "Categories saved.", "Categorías guardadas."],
+      ["Preferències desades en aquest navegador.", "Preferences saved in this browser.", "Preferencias guardadas en este navegador."],
+      ["No s'han pogut desar les preferències. Comprova l'emmagatzematge del navegador.", "Could not save preferences. Check your browser storage settings.", "No se pudieron guardar las preferencias. Comprueba el almacenamiento del navegador."],
+      ["No s'han pogut carregar les preferències desades.", "Could not load saved preferences.", "No se pudieron cargar las preferencias guardadas."],
+      ["Totes les categories estan seleccionades.", "All categories are selected.", "Todas las categorías están seleccionadas."],
+      ["El número exacte", "The exact number", "El número exacto"],
+      ["Sudoku", "Sudoku", "Sudoku"],
+      ["Què puja però mai no baixa?", "What goes up but never comes down?", "¿Qué sube pero nunca baja?"],
+      ["L'edat", "Age", "La edad"],
+      ["Un globus", "A balloon", "Un globo"],
+      ["El fum", "Smoke", "El humo"],
+      ["Un ascensor", "An elevator", "Un ascensor"],
+      ["Què té moltes dents però no pot mossegar?", "What has many teeth but cannot bite?", "¿Qué tiene muchos dientes pero no puede morder?"],
+      ["Una serra", "A saw", "Una sierra"],
+      ["Una pinta", "A comb", "Un peine"],
+      ["Un cocodril", "A crocodile", "Un cocodrilo"],
+      ["Una cremallera", "A zipper", "Una cremallera"],
+      ["Quin mes de l'any té 28 dies?", "Which month has 28 days?", "¿Qué mes del año tiene 28 días?"],
+      ["Febrer", "February", "Febrero"],
+      ["Tots", "All of them", "Todos"],
+      ["Gener", "January", "Enero"],
+      ["Cap", "None", "Ninguno"],
+      ["Què es trenca quan dius el seu nom?", "What breaks when you say its name?", "¿Qué se rompe cuando dices su nombre?"],
+      ["Un got", "A glass", "Un vaso"],
+      ["El silenci", "Silence", "El silencio"],
+      ["Un secret", "A secret", "Un secreto"],
+      ["Una promesa", "A promise", "Una promesa"],
+      ["Quants animals de cada espècie va pujar Moisès a l'arca?", "How many animals of each species did Moses take on the ark?", "¿Cuántos animales de cada especie subió Moisés al arca?"],
+      ["Dos", "Two", "Dos"],
+      ["Un mascle i una femella", "One male and one female", "Un macho y una hembra"],
+      ["Cap: era Noè", "None: it was Noah", "Ninguno: era Noé"],
+      ["Set parelles", "Seven pairs", "Siete parejas"],
+      ["Tinc ciutats però no cases, boscos però no arbres i rius però no aigua. Què sóc?", "I have cities but no houses, forests but no trees, and rivers but no water. What am I?", "Tengo ciudades pero no casas, bosques pero no árboles y ríos pero no agua. ¿Qué soy?"],
+      ["Un somni", "A dream", "Un sueño"],
+      ["Un mapa", "A map", "Un mapa"],
+      ["Una fotografia", "A photograph", "Una fotografía"],
+      ["Un llibre", "A book", "Un libro"],
+      ["Què és teu però els altres fan servir més que tu?", "What belongs to you but is used more by others?", "¿Qué es tuyo pero los demás usan más que tú?"],
+      ["El teu nom", "Your name", "Tu nombre"],
+      ["La teva cadira", "Your chair", "Tu silla"],
+      ["El teu telèfon", "Your phone", "Tu teléfono"],
+      ["El teu temps", "Your time", "Tu tiempo"],
+      ["Un gall pon un ou al cim d'una teulada. Cap a quin costat cau?", "A rooster lays an egg on a roof. Which way does it fall?", "Un gallo pone un huevo en el tejado. ¿Hacia qué lado cae?"],
+      ["A l'esquerra", "To the left", "A la izquierda"],
+      ["A la dreta", "To the right", "A la derecha"],
+      ["Cap: els galls no ponen ous", "Nowhere: roosters don't lay eggs", "A ningún lado: los gallos no ponen huevos"],
+      ["Depèn del vent", "It depends on the wind", "Depende del viento"],
+      ["No trobo aquesta paraula al vocabulari de demostració.", "That word is not in the sample dictionary.", "No encuentro esa palabra en el vocabulario de muestra."],
+      ["Aquesta paraula necessita lletres que no tens.", "That word needs letters you don't have.", "Esa palabra necesita letras que no tienes."],
+      ["Molt bé! ", "Well done! ", "¡Muy bien! "],
+      ["Prova de superar la teva millor paraula.", "Try to beat your best word.", "Intenta superar tu mejor palabra."],
+      ["Fes la paraula més llarga que puguis.", "Make the longest word you can.", "Forma la palabra más larga que puedas."],
+      ["Perfecte! Sudoku resolt.", "Perfect! Sudoku solved.", "¡Perfecto! Sudoku resuelto."],
+      ["Paraula més llarga del vocabulari:", "Longest word in the dictionary:", "Palabra más larga del vocabulario:"],
+      ["Endevinalla", "Riddle", "Acertijo"],
+      ["RESULTAT OBJECTIU", "TARGET NUMBER", "NÚMERO OBJETIVO"],
+      ["LA TEVA PARAULA", "YOUR WORD", "TU PALABRA"],
+      ["La teva millor:", "Your best:", "Tu mejor:"],
+      ["La selecció ha de tenir com a mínim dues categories.", "Choose at least two categories.", "Selecciona al menos dos categorías."],
+      ["Català", "Catalan", "Catalán"],
+      ["Español", "Español", "Español"],
+      ["Selecció pendent de desar.", "Unsaved selection.", "Selección pendiente de guardar."],
+      ["Pista: el resultat sempre es pot assolir amb els quatre primers nombres.", "Hint: the target can always be reached using the first four numbers.", "Pista: siempre puedes alcanzar el resultado con los cuatro primeros números."],
+      ["Codi correcte.", "Correct code.", "Código correcto."],
+      ["No trobo aquesta paraula al vocabulari de demostració.", "That word is not in the sample dictionary.", "No encuentro esa palabra en el vocabulario de muestra."],
+      ["Aquesta paraula necessita lletres que no tens.", "That word needs letters you don't have.", "Esa palabra necesita letras que no tienes."],
+      ["Fes la paraula més llarga que puguis.", "Make the longest word you can.", "Forma la palabra más larga que puedas."],
+      ["Exacte! Has trobat el resultat. Vols provar-ne un altre?", "Exact! You found the target. Want to try another?", "¡Exacto! Has encontrado el resultado. ¿Quieres probar otro?"],
+      ["Aquesta divisió no és exacta. Prova una altra operació.", "That division is not exact. Try another operation.", "Esa división no es exacta. Prueba otra operación."],
+      ["No era aquesta. Torna a mirar la seqüència!", "Not that one. Watch the sequence again!", "No era esa. ¡Vuelve a mirar la secuencia!"],
+      ["Molt bé! ", "Well done! ", "¡Muy bien! "],
+      ["Error local de base de dades", "Local database error", "Error de base de datos local"]
+    ];
+    const translations = { en: {}, es: {} };
+    translationRows.forEach(([ca, en, es]) => {
+      translations.en[ca] = en;
+      translations.es[ca] = es;
+    });
+    const originalTexts = new WeakMap();
+    const originalAttributes = new WeakMap();
+    let applyingTranslations = false;
+
+    function translateValue(catalan, language = document.documentElement.lang || "ca") {
+      const dictionary = translations[language];
+      if (!dictionary) return catalan;
+      if (dictionary[catalan]) return dictionary[catalan];
+      let match = catalan.match(/^Repte (\d+) de (\d+) · (.+)$/);
+      if (match) return language === "en" ? `Challenge ${match[1]} of ${match[2]} · ${match[3]}` : `Reto ${match[1]} de ${match[2]} · ${match[3]}`;
+      match = catalan.match(/^(\d+) de (\d+)\. Continua!$/);
+      if (match) return language === "en" ? `${match[1]} of ${match[2]}. Keep going!` : `${match[1]} de ${match[2]}. ¡Sigue!`;
+      match = catalan.match(/^(.+) lletres! Prova de superar la teva millor paraula\.$/);
+      if (match) return language === "en" ? `${match[1]} letters! Try to beat your best word.` : `¡${match[1]} letras! Intenta superar tu mejor palabra.`;
+      match = catalan.match(/^Molt bé! (\d+) lletres\.$/);
+      if (match) return language === "en" ? `Well done! ${match[1]} letters.` : `¡Muy bien! ${match[1]} letras.`;
+      match = catalan.match(/^(.+) (\d+) al lloc correcte, (\d+) al lloc equivocat$/);
+      if (match) return language === "en" ? `${match[1]} — ${match[2]} in the right place, ${match[3]} misplaced` : `${match[1]} — ${match[2]} en el sitio correcto, ${match[3]} en otro lugar`;
+      match = catalan.match(/^Codi descobert en (\d+) (intent|intents)!$/);
+      if (match) return language === "en" ? `Code cracked in ${match[1]} ${Number(match[1]) === 1 ? "guess" : "guesses"}!` : `¡Código descubierto en ${match[1]} ${Number(match[1]) === 1 ? "intento" : "intentos"}!`;
+      match = catalan.match(/^Et queden (\d+) intents\.$/);
+      if (match) return language === "en" ? `${match[1]} guesses left.` : `Te quedan ${match[1]} intentos.`;
+      match = catalan.match(/^S'han acabat els intents\. El codi era (\d+)\.$/);
+      if (match) return language === "en" ? `No guesses left. The code was ${match[1]}.` : `Se acabaron los intentos. El código era ${match[1]}.`;
+      match = catalan.match(/^Endevinalla (\d+)$/);
+      if (match) return language === "en" ? `Riddle ${match[1]}` : `Acertijo ${match[1]}`;
+      match = catalan.match(/^(\d+) ([+\-*\/]) (\d+) = (\d+)\. Continua!$/);
+      if (match) {
+        const operator = { "*": "×", "/": "÷" }[match[2]] || match[2];
+        return language === "en" ? `${match[1]} ${operator} ${match[3]} = ${match[4]}. Keep going!` : `${match[1]} ${operator} ${match[3]} = ${match[4]}. ¡Sigue!`;
+      }
+      match = catalan.match(/^No ben bé: la resposta és «(.+)»\.$/);
+      if (match) return language === "en" ? `Not quite: the answer is “${match[1]}”.` : `No exactamente: la respuesta es «${match[1]}».`;
+      match = catalan.match(/^(\d+) caselles buides(?: · (\d+) valors incorrectes)?\.$/);
+      if (match) return language === "en" ? `${match[1]} empty cells${match[2] ? ` · ${match[2]} incorrect values` : ""}.` : `${match[1]} casillas vacías${match[2] ? ` · ${match[2]} valores incorrectos` : ""}.`;
+      match = catalan.match(/^(\d+) valors incorrectes\.$/);
+      if (match) return language === "en" ? `${match[1]} incorrect values.` : `${match[1]} valores incorrectos.`;
+      match = catalan.match(/^Fila (\d+), columna (\d+)(, pista)?$/);
+      if (match) return language === "en" ? `Row ${match[1]}, column ${match[2]}${match[3] ? ", clue" : ""}` : `Fila ${match[1]}, columna ${match[2]}${match[3] ? ", pista" : ""}`;
+      match = catalan.match(/^Nombre (\d+)(, seleccionat)?$/);
+      if (match) return language === "en" ? `Number ${match[1]}${match[2] ? ", selected" : ""}` : `Número ${match[1]}${match[2] ? ", seleccionado" : ""}`;
+      return catalan;
+    }
+
+    function translateNode(node) {
+      if (!originalTexts.has(node)) originalTexts.set(node, node.nodeValue);
+      const original = originalTexts.get(node);
+      const trimmed = original.trim();
+      if (!trimmed) return;
+      const leading = original.match(/^\s*/)[0];
+      const trailing = original.match(/\s*$/)[0];
+      node.nodeValue = `${leading}${translateValue(trimmed)}${trailing}`;
+    }
+
+    function translateAttributes(root) {
+      const elements = root.querySelectorAll ? [root, ...root.querySelectorAll("*")] : [];
+      elements.forEach((element) => {
+        ["placeholder", "aria-label"].forEach((attribute) => {
+          if (!element.hasAttribute(attribute)) return;
+          let originals = originalAttributes.get(element);
+          if (!originals) {
+            originals = {};
+            originalAttributes.set(element, originals);
+          }
+          if (!(attribute in originals)) originals[attribute] = element.getAttribute(attribute);
+          element.setAttribute(attribute, translateValue(originals[attribute]));
+        });
+      });
+    }
+
+    function translateTree(root = document.body) {
+      applyingTranslations = true;
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode();
+      while (node) {
+        translateNode(node);
+        node = walker.nextNode();
+      }
+      translateAttributes(root);
+      applyingTranslations = false;
+    }
+
+    const translationObserver = new MutationObserver((mutations) => {
+      if (applyingTranslations) return;
+      applyingTranslations = true;
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === Node.TEXT_NODE) translateNode(node);
+          else if (node.nodeType === Node.ELEMENT_NODE) {
+            translateAttributes(node);
+            const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+            let text = walker.nextNode();
+            while (text) {
+              translateNode(text);
+              text = walker.nextNode();
+            }
+          }
+        });
+      });
+      applyingTranslations = false;
+    });
+
+    function applyLanguage(language) {
+      document.documentElement.lang = language;
+      translateTree();
+    }
+
+    const tabs = [...document.querySelectorAll(".game-tab")];
+    const panels = [...document.querySelectorAll(".game-panel")];
+    const gameIds = tabs.map((tab) => tab.dataset.panel);
+    const EXTRA_GAME_IDS = ["arithmetic", "anagrams", "oddone", "cipher", "visualcount", "directions", "weights", "calendar", "mini-grid", "shapes", "wordlogic", "estimation", "coordinates"];
+    const LEVEL_COUNT = 10;
+    const CATEGORY_VERSION = 2;
+    let selectedCategories = [...gameIds];
+    let currentLanguage = "ca";
+    let currentCategory = "";
+    let currentLevel = 1;
+    let levelProgress = {};
+    let gameInitializers = {};
+    let randomDeck = [];
+    let randomPosition = -1;
+    let randomModeActive = false;
+
+    function showGame(gameId, fromRandom = false) {
+      tabs.forEach((item) => item.setAttribute("aria-pressed", String(item.dataset.panel === gameId)));
+      const panelId = EXTRA_GAME_IDS.includes(gameId) ? "panel-extra" : `panel-${gameId}`;
+      panels.forEach((panel) => { panel.hidden = panel.id !== panelId; });
+      currentCategory = gameId;
+      currentLevel = 1;
+      document.getElementById("level-picker").hidden = fromRandom;
+      if (!fromRandom) renderLevelPicker();
+      if (fromRandom) {
+        gameInitializers[gameId]?.();
+      } else {
+        randomModeActive = false;
+        document.getElementById("start-random").hidden = false;
+        document.getElementById("next-random").hidden = true;
+        document.getElementById("random-status").textContent = "Tria un joc o deixa que te'l triem nosaltres.";
+        gameInitializers[gameId]?.();
+      }
+    }
+
+    function solvedLevels(category) {
+      return [...new Set((levelProgress[category] || []).filter((level) => Number.isInteger(level) && level >= 1 && level <= LEVEL_COUNT))].sort((a, b) => a - b);
+    }
+
+    function maxUnlockedLevel(category) {
+      const solved = new Set(solvedLevels(category));
+      let level = 1;
+      while (level < LEVEL_COUNT && solved.has(level)) level += 1;
+      return level;
+    }
+
+    function translateLevelCount(solved, total) {
+      if (currentLanguage === "en") return `${solved} / ${total} completed`;
+      if (currentLanguage === "es") return `${solved} / ${total} resueltos`;
+      return `${solved} / ${total} resolts`;
+    }
+
+    function renderLevelPicker() {
+      const picker = document.getElementById("level-picker");
+      const list = document.getElementById("level-list");
+      list.replaceChildren();
+      if (!currentCategory) {
+        picker.hidden = true;
+        return;
+      }
+      picker.hidden = false;
+      const tab = tabs.find((item) => item.dataset.panel === currentCategory);
+      const titleNode = tab.querySelector("strong").firstChild;
+      const title = originalTexts.get(titleNode)?.trim() || tab.querySelector("strong").textContent;
+      document.getElementById("level-category-name").textContent = `${translateValue(title)} · ${translateValue("Nivells")}`;
+      const solved = new Set(solvedLevels(currentCategory));
+      const unlocked = maxUnlockedLevel(currentCategory);
+      document.getElementById("level-progress").textContent = translateLevelCount(solved.size, LEVEL_COUNT);
+      for (let level = 1; level <= LEVEL_COUNT; level += 1) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `level-button${solved.has(level) ? " completed" : ""}`;
+        button.textContent = solved.has(level) ? "✓" : String(level);
+        button.disabled = level > unlocked;
+        button.setAttribute("aria-label", `${translateValue("Nivell")} ${level} · ${translateValue(level > unlocked ? "Bloquejat" : solved.has(level) ? "Resolts" : "Desbloquejat")}`);
+        button.setAttribute("aria-pressed", String(currentLevel === level));
+        button.addEventListener("click", () => {
+          currentLevel = level;
+          renderLevelPicker();
+          gameInitializers[currentCategory]?.();
+        });
+        list.append(button);
+      }
+      translateTree();
+    }
+
+    async function markLevelSolved(category = currentCategory) {
+      if (!category || randomModeActive) return;
+      const solved = new Set(solvedLevels(category));
+      if (solved.has(currentLevel)) return;
+      solved.add(currentLevel);
+      levelProgress[category] = [...solved].sort((a, b) => a - b);
+      renderLevelPicker();
+      try {
+        const database = await openPreferencesDatabase();
+        const transaction = database.transaction("progres", "readwrite");
+        transaction.objectStore("progres").put(levelProgress, "nivells");
+        await new Promise((resolve, reject) => {
+          transaction.oncomplete = resolve;
+          transaction.onerror = () => reject(transaction.error || new Error("No s'ha pogut desar el progrés."));
+          transaction.onabort = () => reject(transaction.error || new Error("S'ha cancel·lat el desament del progrés."));
+        });
+      } catch (error) {
+        console.error("Error desant el progrés dels nivells:", error);
+        document.getElementById("level-progress").textContent = translateValue("No s'ha pogut desar el progrés.");
+      }
+    }
+
+    function renderCategorySelection() {
+      const list = document.getElementById("category-list");
+      list.replaceChildren();
+      tabs.forEach((tab) => {
+        const label = document.createElement("label");
+        label.className = "category-option";
+        const titleNode = tab.querySelector("strong").firstChild;
+        const categoryName = originalTexts.get(titleNode)?.trim() || tab.querySelector("strong").textContent;
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = tab.dataset.panel;
+        checkbox.checked = selectedCategories.includes(tab.dataset.panel);
+        checkbox.setAttribute("aria-label", categoryName);
+        const name = document.createElement("span");
+        name.textContent = categoryName;
+        label.append(checkbox, name);
+        list.append(label);
+        checkbox.addEventListener("change", () => {
+          const checked = [...list.querySelectorAll("input:checked")].map((input) => input.value);
+          if (checked.length < 2) {
+            checkbox.checked = true;
+            setPreferenceStatus("La selecció ha de tenir com a mínim dues categories.");
+            return;
+          }
+          selectedCategories = checked;
+          setPreferenceStatus("Selecció pendent de desar.");
+        });
+      });
+      translateTree();
+    }
+
+    function setPreferenceStatus(message) {
+      document.getElementById("preferences-status").textContent = message;
+    }
+
+    let databasePromise;
+    function openPreferencesDatabase() {
+      if (!databasePromise) {
+        databasePromise = new Promise((resolve, reject) => {
+          const request = window.indexedDB.open("el-raco-dels-enigmes", 2);
+          request.onupgradeneeded = () => {
+            if (!request.result.objectStoreNames.contains("preferencies")) {
+              request.result.createObjectStore("preferencies");
+            }
+            if (!request.result.objectStoreNames.contains("progres")) {
+              request.result.createObjectStore("progres");
+            }
+          };
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error || new Error("No s'ha pogut obrir IndexedDB."));
+        });
+      }
+      return databasePromise;
+    }
+
+    async function readPreferences() {
+      const database = await openPreferencesDatabase();
+      return new Promise((resolve, reject) => {
+        const transaction = database.transaction("preferencies", "readonly");
+        const request = transaction.objectStore("preferencies").get("usuari");
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => reject(request.error || new Error("No s'han pogut llegir les preferències."));
+        transaction.onerror = () => reject(transaction.error || new Error("Error en llegir la base de dades local."));
+      });
+    }
+
+    async function readLevelProgress() {
+      const database = await openPreferencesDatabase();
+      return new Promise((resolve, reject) => {
+        const transaction = database.transaction("progres", "readonly");
+        const request = transaction.objectStore("progres").get("nivells");
+        request.onsuccess = () => resolve(request.result || {});
+        request.onerror = () => reject(request.error || new Error("No s'ha pogut llegir el progrés."));
+        transaction.onerror = () => reject(transaction.error || new Error("Error en llegir el progrés."));
+      });
+    }
+
+    async function writePreferences() {
+      const database = await openPreferencesDatabase();
+      const transaction = database.transaction("preferencies", "readwrite");
+      transaction.objectStore("preferencies").put({
+        language: currentLanguage,
+        categories: [...selectedCategories],
+        categoryVersion: CATEGORY_VERSION
+      }, "usuari");
+      return new Promise((resolve, reject) => {
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error || new Error("No s'han pogut desar les preferències."));
+        transaction.onabort = () => reject(transaction.error || new Error("S'ha cancel·lat el desament de preferències."));
+      });
+    }
+
+    async function savePreferences(successMessage = "Preferències desades en aquest navegador.") {
+      try {
+        await writePreferences();
+        setPreferenceStatus(successMessage);
+      } catch (error) {
+        console.error("Error desant les preferències locals:", error);
+        setPreferenceStatus("No s'han pogut desar les preferències. Comprova l'emmagatzematge del navegador.");
+      }
+    }
+
+    async function initializePreferences() {
+      const languageSelect = document.getElementById("language-select");
+      const selectAllButton = document.getElementById("select-all-categories");
+      const saveCategoriesButton = document.getElementById("save-categories");
+      const randomButton = document.getElementById("start-random");
+      languageSelect.disabled = true;
+      selectAllButton.disabled = true;
+      saveCategoriesButton.disabled = true;
+      randomButton.disabled = true;
+      try {
+        const saved = await readPreferences();
+        levelProgress = await readLevelProgress();
+        let migratedCategories = false;
+        if (saved && ["ca", "en", "es"].includes(saved.language)) currentLanguage = saved.language;
+        if (saved && Array.isArray(saved.categories)) {
+          let valid = [...new Set(saved.categories.filter((id) => gameIds.includes(id)))];
+          if (saved.categoryVersion !== CATEGORY_VERSION) {
+            valid = [...new Set([...valid, ...EXTRA_GAME_IDS])];
+            migratedCategories = true;
+          }
+          if (valid.length >= 2) selectedCategories = [...new Set(valid)];
+        }
+        languageSelect.value = currentLanguage;
+        renderCategorySelection();
+        if (currentCategory) renderLevelPicker();
+        applyLanguage(currentLanguage);
+        document.title = translateValue("El Racó dels Enigmes", currentLanguage);
+        if (migratedCategories) await writePreferences();
+        if (saved) setPreferenceStatus("Preferències desades en aquest navegador.");
+      } catch (error) {
+        console.error("Error carregant les preferències locals:", error);
+        setPreferenceStatus("No s'han pogut carregar les preferències desades.");
+        renderCategorySelection();
+        applyLanguage(currentLanguage);
+        document.title = translateValue("El Racó dels Enigmes", currentLanguage);
+      } finally {
+        languageSelect.disabled = false;
+        selectAllButton.disabled = false;
+        saveCategoriesButton.disabled = false;
+        randomButton.disabled = false;
+      }
+    }
+
+    document.getElementById("language-select").addEventListener("change", (event) => {
+      currentLanguage = event.target.value;
+      applyLanguage(currentLanguage);
+      document.title = translateValue("El Racó dels Enigmes", currentLanguage);
+      if (randomModeActive) updateRandomStatus();
+      newWordGame();
+      if (EXTRA_GAME_IDS.includes(currentCategory)) newExtraGame();
+      if (!randomModeActive) renderLevelPicker();
+      savePreferences();
+    });
+
+    document.getElementById("select-all-categories").addEventListener("click", () => {
+      selectedCategories = [...gameIds];
+      renderCategorySelection();
+      setPreferenceStatus("Totes les categories estan seleccionades.");
+    });
+
+    document.getElementById("save-categories").addEventListener("click", () => {
+      selectedCategories = [...document.querySelectorAll("#category-list input:checked")].map((input) => input.value);
+      if (selectedCategories.length < 2) {
+        setPreferenceStatus("La selecció ha de tenir com a mínim dues categories.");
+        return;
+      }
+      savePreferences("Categories desades.");
+    });
+
+    tabs.forEach((tab) => tab.addEventListener("click", () => {
+      tabs.forEach((item) => item.setAttribute("aria-pressed", String(item === tab)));
+      showGame(tab.dataset.panel);
+    }));
+
+    const numberGrid = document.getElementById("number-grid");
+    const numberMessage = document.getElementById("number-message");
+    const selectionHelp = document.getElementById("selection-help");
+    const targetDisplay = document.getElementById("target-number");
+    const operatorButtons = [...document.querySelectorAll(".operator")];
+    let numberItems = [];
+    let selectedNumbers = [];
+    let nextNumberId = 0;
+    let targetNumber = 0;
+
+    function numberMessageText(text, kind = "") {
+      numberMessage.textContent = text;
+      numberMessage.className = `message ${kind}`.trim();
+    }
+
+    function newNumberGame() {
+      let values;
+      let target;
+      const maxValue = 20 + currentLevel * 2;
+      do {
+        values = Array.from({ length: 10 }, () => Math.floor(Math.random() * maxValue) + 1);
+        target = values[0] * values[1] + values[2] * values[3];
+      } while (target < 100 || target > 999);
+      targetNumber = target;
+      targetDisplay.textContent = String(target);
+      numberItems = values.map((value) => ({ id: nextNumberId++, value }));
+      selectedNumbers = [];
+      numberMessageText("Pista: el resultat sempre es pot assolir amb els quatre primers nombres.");
+      renderNumbers();
+    }
+
+    function renderNumbers() {
+      numberGrid.replaceChildren();
+      numberItems.forEach((item) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `number-tile${selectedNumbers.includes(item.id) ? " selected" : ""}`;
+        button.textContent = String(item.value);
+        button.setAttribute("aria-label", `Nombre ${item.value}${selectedNumbers.includes(item.id) ? ", seleccionat" : ""}`);
+        button.setAttribute("aria-pressed", String(selectedNumbers.includes(item.id)));
+        button.addEventListener("click", () => {
+          if (selectedNumbers.includes(item.id)) {
+            selectedNumbers = selectedNumbers.filter((id) => id !== item.id);
+          } else if (selectedNumbers.length < 2) {
+            selectedNumbers.push(item.id);
+          }
+          renderNumbers();
+        });
+        numberGrid.append(button);
+      });
+      operatorButtons.forEach((button) => { button.disabled = selectedNumbers.length !== 2; });
+      selectionHelp.textContent = selectedNumbers.length === 2 ? "Ara tria una operació" : "Tria dos nombres i una operació";
+    }
+
+    function applyOperation(operation) {
+      if (selectedNumbers.length !== 2) return;
+      const [first, second] = selectedNumbers.map((id) => numberItems.find((item) => item.id === id));
+      if (!first || !second) return;
+      let result;
+      if (operation === "+") result = first.value + second.value;
+      if (operation === "-") result = Math.abs(first.value - second.value);
+      if (operation === "*") result = first.value * second.value;
+      if (operation === "/") {
+        const larger = Math.max(first.value, second.value);
+        const smaller = Math.min(first.value, second.value);
+        if (smaller === 0 || larger % smaller !== 0) {
+          numberMessageText("Aquesta divisió no és exacta. Prova una altra operació.", "error");
+          return;
+        }
+        result = larger / smaller;
+      }
+      numberItems = numberItems.filter((item) => !selectedNumbers.includes(item.id));
+      numberItems.push({ id: nextNumberId++, value: result });
+      selectedNumbers = [];
+      if (result === targetNumber) {
+        numberMessageText("Exacte! Has trobat el resultat. Vols provar-ne un altre?", "success");
+        markLevelSolved();
+      } else {
+        numberMessageText(`${first.value} ${operation} ${second.value} = ${result}. Continua!`);
+      }
+      renderNumbers();
+    }
+
+    operatorButtons.forEach((button) => button.addEventListener("click", () => applyOperation(button.dataset.operation)));
+    document.getElementById("new-number-game").addEventListener("click", newNumberGame);
+
+    const wordBank = [
+      "aigua", "aire", "amic", "amiga", "animal", "arbre", "arena", "avui", "bala", "banc",
+      "barca", "barri", "bassa", "beure", "boca", "bosc", "branca", "bufar", "cabra", "calaix",
+      "calma", "cami", "camp", "cantar", "canya", "caragol", "casa", "caseta", "cavall", "cel",
+      "cendra", "cercle", "cinta", "clar", "clau", "coberta", "codi", "coll", "color", "cometa",
+      "conill", "cor", "costa", "crema", "cuina", "dansa", "darrer", "dau", "dit", "dolc",
+      "dona", "dormir", "dues", "eina", "encendre", "energia", "enigma", "entrada", "escola", "escuma",
+      "espai", "espera", "estrella", "familia", "farina", "finestra", "flama", "flor", "foc", "forat",
+      "formatge", "fusta", "gall", "ganivet", "gat", "gelat", "gira", "gos", "grana", "granota",
+      "grua", "guineu", "harmonia", "herba", "historia", "home", "horari", "illa", "imatge", "jardi",
+      "joc", "joguina", "jornada", "lila", "llapis", "llarg", "lletra", "llimona", "lluna", "llum",
+      "maquina", "mar", "mel", "ment", "mesa", "mesura", "mirall", "mola", "muntanya", "museu",
+      "nadal", "neula", "neu", "nina", "nit", "nom", "novel", "nuvol", "oli", "ombra",
+      "orella", "origen", "os", "ou", "paper", "paraula", "paret", "passadis", "pastis", "pedra",
+      "peix", "pensa", "perla", "petit", "platja", "pluja", "porta", "postal", "prat", "puzzle",
+      "quadern", "quatre", "raig", "raim", "reina", "rellotge", "riu", "roba", "roda", "roig",
+      "sala", "salut", "samarreta", "sardina", "seient", "serp", "setmana", "sopa", "sorra", "sucre",
+      "taula", "teatre", "temps", "terra", "tigre", "timba", "tinta", "tomaquet", "torre", "triangle",
+      "ull", "unio", "univers", "vaca", "valent", "vaixell", "verd", "veritat", "viatge", "vidre",
+      "vida", "vinya", "vola", "volum", "xarxa", "xocolata", "zebra"
+    ];
+    const wordBanks = {
+      ca: wordBank,
+      en: [
+        "about", "above", "after", "again", "apple", "arrow", "beach", "bread", "bring", "chair",
+        "chase", "clean", "clock", "cloud", "coast", "dance", "dream", "earth", "eight", "enter",
+        "event", "exact", "flame", "flour", "flower", "forest", "friend", "garden", "giant", "glass",
+        "grape", "green", "guide", "heart", "house", "inside", "island", "jacket", "jungle", "large",
+        "learn", "letter", "little", "market", "memory", "mountain", "number", "orange", "planet", "puzzle",
+        "rabbit", "reason", "rocket", "school", "shadow", "silver", "smile", "spiral", "square", "stream",
+        "strong", "summer", "table", "teacher", "thread", "ticket", "travel", "triangle", "tunnel", "turtle",
+        "valley", "window", "winter", "wonder", "yellow"
+      ],
+      es: [
+        "ahora", "amigo", "arena", "barco", "barrio", "blanco", "bosque", "camino", "campo", "cantar",
+        "carta", "casa", "cielo", "claro", "color", "conejo", "correr", "cuatro", "dedo", "dibujo",
+        "dormir", "estrella", "familia", "faro", "flor", "fuego", "gato", "gigante", "globo", "grande",
+        "grupo", "hoja", "hombre", "jardin", "juego", "juguete", "lago", "libro", "lluvia", "madera",
+        "mano", "mapa", "mariposa", "mesa", "montana", "naranja", "nube", "numero", "palabra", "papel",
+        "parque", "pelota", "piedra", "playa", "puente", "queso", "reloj", "respuesta", "ruido", "secreto",
+        "semana", "sonrisa", "sombra", "suelo", "tambor", "tomate", "tortuga", "trabajo", "viaje", "ventana",
+        "viento", "zorro"
+      ]
+    };
+    function activeWordBank() {
+      return wordBanks[currentLanguage] || wordBank;
+    }
+    const vowels = "aeiou";
+    const consonants = "bcdfghjklmnpqrstvwxyz";
+    const letterRack = document.getElementById("letter-rack");
+    const wordInput = document.getElementById("word-input");
+    const wordMessage = document.getElementById("word-message");
+    let bestWord = "";
+    let currentLongest = "";
+
+    function normalizeWord(word) {
+      return word.toLocaleLowerCase("ca").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z]/g, "");
+    }
+
+    function canMakeWord(word, letters) {
+      const available = [...letters];
+      for (const letter of normalizeWord(word)) {
+        const index = available.indexOf(letter);
+        if (index === -1) return false;
+        available.splice(index, 1);
+      }
+      return true;
+    }
+
+    function newWordGame() {
+      const letters = [];
+      for (let index = 0; index < 4; index += 1) letters.push(vowels[Math.floor(Math.random() * vowels.length)]);
+      for (let index = 0; index < 5; index += 1) letters.push(consonants[Math.floor(Math.random() * consonants.length)]);
+      letters.sort(() => Math.random() - 0.5);
+      letterRack.replaceChildren();
+      letters.forEach((letter) => {
+        const tile = document.createElement("span");
+        tile.className = "letter-tile";
+        tile.textContent = letter.toLocaleUpperCase("ca");
+        letterRack.append(tile);
+      });
+      currentLongest = activeWordBank().filter((word) => canMakeWord(word, letters)).sort((a, b) => b.length - a.length)[0] || "";
+      bestWord = "";
+      document.getElementById("word-best").textContent = "—";
+      document.getElementById("word-hint-word").textContent = currentLongest ? `${currentLongest} (${currentLongest.length})` : "—";
+      document.getElementById("word-hint").hidden = true;
+      wordInput.value = "";
+      wordMessage.textContent = "Fes la paraula més llarga que puguis.";
+      wordMessage.className = "message";
+    }
+
+    document.getElementById("word-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const submitted = normalizeWord(wordInput.value);
+      const letters = [...letterRack.textContent.toLocaleLowerCase("ca")];
+      const found = activeWordBank().find((word) => normalizeWord(word) === submitted);
+      if (!found) {
+        wordMessage.textContent = "No trobo aquesta paraula al vocabulari de demostració.";
+        wordMessage.className = "message error";
+      } else if (!canMakeWord(found, letters)) {
+        wordMessage.textContent = "Aquesta paraula necessita lletres que no tens.";
+        wordMessage.className = "message error";
+      } else if (found.length <= bestWord.length) {
+        wordMessage.textContent = `${found.length} lletres! Prova de superar la teva millor paraula.`;
+        wordMessage.className = "message";
+      } else {
+        bestWord = found;
+        document.getElementById("word-best").textContent = `${found} (${found.length})`;
+        wordMessage.textContent = `Molt bé! ${found.length} lletres.`;
+        wordMessage.className = "message success";
+      }
+      if (found && canMakeWord(found, letters)) markLevelSolved();
+      wordInput.select();
+    });
+    document.getElementById("new-word-game").addEventListener("click", newWordGame);
+
+    const sudokuSolution = [
+      "534678912", "672195348", "198342567",
+      "859761423", "426853791", "713924856",
+      "961537284", "287419635", "345286179"
+    ];
+    const blankCells = new Set([1, 4, 7, 9, 12, 14, 17, 19, 22, 24, 27, 30, 32, 35, 37, 40, 42, 45, 47, 50, 52, 55, 57, 60, 62, 65, 67, 70, 72, 75, 77, 80]);
+    const sudokuBlankOrder = [...blankCells, ...Array.from({ length: 81 }, (_, index) => index).filter((index) => !blankCells.has(index))];
+    const sudokuGrid = document.getElementById("sudoku-grid");
+    let sudokuInputs = [];
+
+    function renderSudoku() {
+      sudokuGrid.replaceChildren();
+      sudokuInputs = [];
+      for (let index = 0; index < 81; index += 1) {
+        const row = Math.floor(index / 9);
+        const col = index % 9;
+        const blankLimit = Math.min(20 + currentLevel * 4, 58);
+        const given = !sudokuBlankOrder.slice(0, blankLimit).includes(index);
+        const input = document.createElement("input");
+        input.className = `sudoku-cell${given ? " given" : ""}`;
+        input.type = "text";
+        input.inputMode = "numeric";
+        input.pattern = "[1-9]";
+        input.maxLength = 1;
+        input.value = given ? sudokuSolution[row][col] : "";
+        input.disabled = given;
+        input.setAttribute("aria-label", `Fila ${row + 1}, columna ${col + 1}${given ? ", pista" : ""}`);
+        input.addEventListener("input", () => {
+          input.value = input.value.replace(/[^1-9]/g, "").slice(0, 1);
+          input.classList.remove("wrong");
+        });
+        sudokuInputs.push(input);
+        sudokuGrid.append(input);
+      }
+      const message = document.getElementById("sudoku-message");
+      message.textContent = "";
+      message.className = "message";
+    }
+
+    document.getElementById("check-sudoku").addEventListener("click", () => {
+      let empty = 0;
+      let incorrect = 0;
+      sudokuInputs.forEach((input, index) => {
+        if (input.disabled) return;
+        const expected = sudokuSolution[Math.floor(index / 9)][index % 9];
+        input.classList.toggle("wrong", Boolean(input.value) && input.value !== expected);
+        if (!input.value) empty += 1;
+        else if (input.value !== expected) incorrect += 1;
+      });
+      const message = document.getElementById("sudoku-message");
+      if (empty === 0 && incorrect === 0) {
+        message.textContent = "Perfecte! Sudoku resolt.";
+        message.className = "message success";
+        markLevelSolved();
+      } else {
+        message.textContent = `${empty ? `${empty} caselles buides` : ""}${empty && incorrect ? " · " : ""}${incorrect ? `${incorrect} valors incorrectes` : ""}.`;
+        message.className = "message error";
+      }
+    });
+    document.getElementById("reset-sudoku").addEventListener("click", renderSudoku);
+
+    const codeForm = document.getElementById("code-form");
+    let activeEscapeCode = "428";
+    codeForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const message = document.getElementById("code-message");
+      if (document.getElementById("code-input").value === activeEscapeCode) {
+        document.getElementById("lock-icon").textContent = "🔓";
+        document.getElementById("lock-title").textContent = "Has escapat!";
+        document.getElementById("lock-copy").textContent = "Les pistes eren la clau. Ben jugat!";
+        message.textContent = "Codi correcte.";
+        message.className = "message success";
+        codeForm.hidden = true;
+        document.getElementById("reset-escape").hidden = false;
+        markLevelSolved();
+      } else {
+        message.textContent = "El pany no s'obre. Repassa les pistes i torna-ho a provar.";
+        message.className = "message error";
+      }
+    });
+    document.getElementById("reset-escape").addEventListener("click", () => {
+      document.getElementById("lock-icon").textContent = "🔒";
+      document.getElementById("lock-title").textContent = "El pany electrònic";
+      document.getElementById("lock-copy").textContent = "Introdueix les tres xifres en ordre.";
+      document.getElementById("code-message").textContent = "";
+      document.getElementById("code-message").className = "message";
+      document.getElementById("code-input").value = "";
+      codeForm.hidden = false;
+      document.getElementById("reset-escape").hidden = true;
+    });
+
+    const escapeRounds = [
+      { clues: ["Quantes cantonades té una habitació rectangular?", "Quantes vegades apareix la lletra «a» a «casa»?", "Quantes potes té una aranya?"], code: "428" },
+      { clues: ["Quantes potes té una cadira de quatre potes?", "Quants dies té una setmana?", "Quants costats té un triangle?"], code: "473" },
+      { clues: ["Quantes potes té una aranya?", "Quants sentits se solen ensenyar a l'escola?", "Quantes rodes té una bicicleta?"], code: "852" }
+    ];
+    let lastEscapeRound = -1;
+
+    function newEscapeGame() {
+      let roundIndex = randomModeActive ? Math.floor(Math.random() * escapeRounds.length) : (currentLevel - 1) % escapeRounds.length;
+      if (randomModeActive && roundIndex === lastEscapeRound) roundIndex = (roundIndex + 1) % escapeRounds.length;
+      lastEscapeRound = roundIndex;
+      const round = escapeRounds[roundIndex];
+      activeEscapeCode = round.code;
+      const clues = document.getElementById("escape-clues");
+      clues.replaceChildren();
+      round.clues.forEach((clue) => {
+        const item = document.createElement("li");
+        item.textContent = clue;
+        clues.append(item);
+      });
+      document.getElementById("lock-icon").textContent = "🔒";
+      document.getElementById("lock-title").textContent = "El pany electrònic";
+      document.getElementById("lock-copy").textContent = "Introdueix les tres xifres en ordre.";
+      document.getElementById("code-message").textContent = "";
+      document.getElementById("code-message").className = "message";
+      document.getElementById("code-input").value = "";
+      codeForm.hidden = false;
+      document.getElementById("reset-escape").hidden = true;
+    }
+
+    const memorySymbols = ["🌙", "☀️", "⭐", "☁️"];
+    const memoryButtons = [...document.querySelectorAll(".symbol-button")];
+    let memorySequence = [];
+    let memoryProgress = 0;
+    let memoryActive = false;
+
+    function newMemoryGame() {
+      memorySequence = Array.from({ length: 2 + currentLevel }, () => Math.floor(Math.random() * memorySymbols.length));
+      memoryProgress = 0;
+      memoryActive = false;
+      document.getElementById("memory-display").textContent = "Prem «Mostra la seqüència» per començar.";
+      document.getElementById("memory-message").textContent = "";
+      document.getElementById("memory-message").className = "message";
+      memoryButtons.forEach((button) => { button.disabled = true; });
+      document.getElementById("start-memory").disabled = false;
+    }
+
+    document.getElementById("start-memory").addEventListener("click", () => {
+      memoryProgress = 0;
+      memoryActive = false;
+      memoryButtons.forEach((button) => { button.disabled = true; });
+      document.getElementById("start-memory").disabled = true;
+      document.getElementById("memory-display").textContent = memorySequence.map((symbol) => memorySymbols[symbol]).join(" ");
+      document.getElementById("memory-message").textContent = "Memoritza-la...";
+      window.setTimeout(() => {
+        document.getElementById("memory-display").textContent = "Ara repeteix-la!";
+        document.getElementById("memory-message").textContent = "Tria els símbols en el mateix ordre.";
+        memoryActive = true;
+        memoryButtons.forEach((button) => { button.disabled = false; });
+      }, 1800);
+    });
+
+    memoryButtons.forEach((button) => button.addEventListener("click", () => {
+      if (!memoryActive) return;
+      if (Number(button.dataset.symbol) !== memorySequence[memoryProgress]) {
+        memoryActive = false;
+        document.getElementById("memory-message").textContent = "No era aquesta. Torna a mirar la seqüència!";
+        document.getElementById("memory-message").className = "message error";
+        memoryButtons.forEach((item) => { item.disabled = true; });
+        document.getElementById("start-memory").disabled = false;
+        return;
+      }
+      memoryProgress += 1;
+      if (memoryProgress === memorySequence.length) {
+        memoryActive = false;
+        document.getElementById("memory-message").textContent = "Memòria d'elefant! Seqüència completada.";
+        document.getElementById("memory-message").className = "message success";
+        memoryButtons.forEach((item) => { item.disabled = true; });
+        document.getElementById("start-memory").disabled = false;
+        markLevelSolved();
+      } else {
+        document.getElementById("memory-message").textContent = `${memoryProgress} de ${memorySequence.length}. Continua!`;
+      }
+    }));
+
+    const sequenceChallenges = [
+      { items: [2, 4, 6, 8], answer: 10, hint: "Suma 2 cada vegada." },
+      { items: [3, 6, 12, 24], answer: 48, hint: "Cada nombre es duplica." },
+      { items: [1, 4, 9, 16], answer: 25, hint: "Són quadrats perfectes." },
+      { items: [20, 17, 14, 11], answer: 8, hint: "Resta 3 cada vegada." },
+      { items: [1, 1, 2, 3, 5, 8], answer: 13, hint: "Cada terme suma els dos anteriors." },
+      { items: [5, 10, 20, 40], answer: 80, hint: "Cada terme es multiplica per 2." },
+      { items: [2, 5, 10, 17], answer: 26, hint: "Suma 3, després 5, després 7..." },
+      { items: [81, 27, 9, 3], answer: 1, hint: "Divideix entre 3." }
+    ];
+    let activeSequence = sequenceChallenges[0];
+
+    function newSequenceGame() {
+      const sequenceIndex = randomModeActive ? Math.floor(Math.random() * sequenceChallenges.length) : (currentLevel - 1) % sequenceChallenges.length;
+      activeSequence = sequenceChallenges[sequenceIndex];
+      const items = document.getElementById("sequence-items");
+      items.replaceChildren();
+      [...activeSequence.items, "?"].forEach((value) => {
+        const tile = document.createElement("span");
+        tile.textContent = String(value);
+        items.append(tile);
+      });
+      document.getElementById("sequence-answer").value = "";
+      document.getElementById("sequence-message").textContent = "";
+      document.getElementById("sequence-message").className = "message";
+      document.getElementById("sequence-answer").disabled = false;
+      document.querySelector('#sequence-form button[type="submit"]').disabled = false;
+    }
+
+    document.getElementById("sequence-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const message = document.getElementById("sequence-message");
+      if (Number(document.getElementById("sequence-answer").value) === activeSequence.answer) {
+        message.textContent = "Correcte! " + activeSequence.hint;
+        message.className = "message success";
+        document.getElementById("sequence-answer").disabled = true;
+        document.querySelector('#sequence-form button[type="submit"]').disabled = true;
+        markLevelSolved();
+      } else {
+        message.textContent = "Encara no. Busca el patró que relaciona els nombres.";
+        message.className = "message error";
+      }
+    });
+    document.getElementById("new-sequence").addEventListener("click", newSequenceGame);
+
+    let secretCode = [];
+    let mastermindAttempts = 0;
+    let mastermindFinished = false;
+
+    function newMastermindGame() {
+      const availableDigits = Array.from({ length: Math.min(6 + Math.floor((currentLevel - 1) / 2), 9) }, (_, index) => String(index + 1));
+      secretCode = availableDigits.sort(() => Math.random() - 0.5).slice(0, 4);
+      mastermindAttempts = 0;
+      mastermindFinished = false;
+      document.getElementById("mastermind-history").replaceChildren();
+      document.getElementById("mastermind-input").value = "";
+      document.getElementById("mastermind-input").disabled = false;
+      document.querySelector('#mastermind-form button[type="submit"]').disabled = false;
+      document.getElementById("mastermind-turns").textContent = `Tens ${6 + Math.ceil(currentLevel / 2)} intents. El codi conté quatre xifres diferents de l'1 al ${Math.min(6 + Math.floor((currentLevel - 1) / 2), 9)}.`;
+      document.getElementById("mastermind-message").textContent = "";
+      document.getElementById("mastermind-message").className = "message";
+    }
+
+    document.getElementById("mastermind-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (mastermindFinished) return;
+      const guess = [...document.getElementById("mastermind-input").value].map(Number);
+      const message = document.getElementById("mastermind-message");
+      const digitLimit = Math.min(6 + Math.floor((currentLevel - 1) / 2), 9);
+      if (guess.length !== 4 || new Set(guess).size !== 4 || guess.some((digit) => digit < 1 || digit > digitLimit)) {
+        message.textContent = localized(`Escriu quatre xifres diferents, de l'1 al ${digitLimit}.`, `Enter four different digits from 1 to ${digitLimit}.`, `Escribe cuatro cifras distintas, del 1 al ${digitLimit}.`);
+        message.className = "message error";
+        return;
+      }
+      mastermindAttempts += 1;
+      const exact = guess.filter((digit, index) => digit === secretCode[index]).length;
+      const misplaced = guess.filter((digit, index) => digit !== secretCode[index] && secretCode.includes(digit)).length;
+      const entry = document.createElement("li");
+      entry.textContent = `${guess.join("")} — ${exact} al lloc correcte, ${misplaced} al lloc equivocat`;
+      document.getElementById("mastermind-history").prepend(entry);
+      document.getElementById("mastermind-input").value = "";
+      if (exact === 4) {
+        mastermindFinished = true;
+        message.textContent = `Codi descobert en ${mastermindAttempts} ${mastermindAttempts === 1 ? "intent" : "intents"}!`;
+        message.className = "message success";
+        markLevelSolved();
+      } else if (mastermindAttempts === 6 + Math.ceil(currentLevel / 2)) {
+        mastermindFinished = true;
+        message.textContent = `S'han acabat els intents. El codi era ${secretCode.join("")}.`;
+        message.className = "message error";
+      } else {
+        document.getElementById("mastermind-turns").textContent = `Et queden ${6 + Math.ceil(currentLevel / 2) - mastermindAttempts} intents.`;
+        message.textContent = "Pista afegida a l'historial.";
+        message.className = "message";
+      }
+      if (mastermindFinished) {
+        document.getElementById("mastermind-input").disabled = true;
+        document.querySelector('#mastermind-form button[type="submit"]').disabled = true;
+      }
+    });
+    document.getElementById("new-mastermind").addEventListener("click", newMastermindGame);
+
+    const riddles = [
+      { question: "Què puja però mai no baixa?", answers: ["L'edat", "Un globus", "El fum", "Un ascensor"], correct: 0 },
+      { question: "Què té moltes dents però no pot mossegar?", answers: ["Una serra", "Una pinta", "Un cocodril", "Una cremallera"], correct: 1 },
+      { question: "Quin mes de l'any té 28 dies?", answers: ["Febrer", "Tots", "Gener", "Cap"], correct: 1 },
+      { question: "Què es trenca quan dius el seu nom?", answers: ["Un got", "El silenci", "Un secret", "Una promesa"], correct: 1 },
+      { question: "Quants animals de cada espècie va pujar Moisès a l'arca?", answers: ["Dos", "Un mascle i una femella", "Cap: era Noè", "Set parelles"], correct: 2 },
+      { question: "Tinc ciutats però no cases, boscos però no arbres i rius però no aigua. Què sóc?", answers: ["Un somni", "Un mapa", "Una fotografia", "Un llibre"], correct: 1 },
+      { question: "Què és teu però els altres fan servir més que tu?", answers: ["El teu nom", "La teva cadira", "El teu telèfon", "El teu temps"], correct: 0 },
+      { question: "Un gall pon un ou al cim d'una teulada. Cap a quin costat cau?", answers: ["A l'esquerra", "A la dreta", "Cap: els galls no ponen ous", "Depèn del vent"], correct: 2 }
+    ];
+    let lastRiddle = -1;
+    let riddleNumber = 0;
+    let riddleAnswered = false;
+
+    function newRiddleGame() {
+      let index = randomModeActive ? Math.floor(Math.random() * riddles.length) : (currentLevel - 1) % riddles.length;
+      if (randomModeActive && index === lastRiddle) index = (index + 1) % riddles.length;
+      lastRiddle = index;
+      riddleNumber += 1;
+      riddleAnswered = false;
+      const riddle = riddles[index];
+      document.getElementById("riddle-count").textContent = `Endevinalla ${riddleNumber}`;
+      document.getElementById("riddle-question").textContent = riddle.question;
+      document.getElementById("riddle-message").textContent = "";
+      document.getElementById("riddle-message").className = "message";
+      document.getElementById("riddle-choices").replaceChildren();
+      riddle.answers.forEach((answer, answerIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice-button";
+        button.textContent = answer;
+        button.addEventListener("click", () => {
+          if (riddleAnswered) return;
+          riddleAnswered = true;
+          const correct = answerIndex === riddle.correct;
+          button.classList.add(correct ? "correct" : "incorrect");
+          if (!correct) document.querySelectorAll("#riddle-choices .choice-button")[riddle.correct].classList.add("correct");
+          document.querySelectorAll("#riddle-choices .choice-button").forEach((choice) => { choice.disabled = true; });
+          const message = document.getElementById("riddle-message");
+          message.textContent = correct ? "Exacte! Ben vist." : `No ben bé: la resposta és «${riddle.answers[riddle.correct]}».`;
+          message.className = `message ${correct ? "success" : "error"}`;
+          if (correct) markLevelSolved();
+        });
+        document.getElementById("riddle-choices").append(button);
+      });
+    }
+    document.getElementById("next-riddle").addEventListener("click", newRiddleGame);
+
+    function localized(ca, en, es) {
+      return { ca, en, es }[currentLanguage] || ca;
+    }
+
+    function createExtraChallenge(category, level) {
+      if (category === "arithmetic") {
+        const a = level * 7 + 12;
+        const b = level * 3 + 5;
+        const operation = level % 3;
+        const expression = operation === 0 ? `${a} + ${b}` : operation === 1 ? `${a + b} − ${b}` : `${level + 3} × ${level + 2}`;
+        const answer = operation === 0 ? a + b : operation === 1 ? a : (level + 3) * (level + 2);
+        return { prompt: localized(`Quant fa ${expression}?`, `What is ${expression}?`, `¿Cuánto es ${expression}?`), answer };
+      }
+
+      if (category === "anagrams") {
+        const candidates = activeWordBank().filter((word) => word.length >= 4 && word.length <= Math.min(5 + level, 10));
+        const answer = candidates[(level * 13) % candidates.length] || candidates[0] || "casa";
+        const letters = answer.split("");
+        const shift = Math.max(1, level % letters.length);
+        const symbols = [...letters.slice(shift), ...letters.slice(0, shift)].join("").toLocaleUpperCase(currentLanguage);
+        return {
+          prompt: localized("Ordena les lletres per descobrir la paraula.", "Rearrange the letters to find the word.", "Ordena las letras para descubrir la palabra."),
+          symbols, answer
+        };
+      }
+
+      if (category === "oddone") {
+        const start = level + 2;
+        const options = [start * 2, start * 2 + 2, start * 2 + 4, start * 2 + 1].map(String);
+        return { prompt: localized("Quin nombre no segueix el patró dels altres?", "Which number does not follow the pattern?", "¿Qué número no sigue el patrón de los demás?"), options, answer: options[3] };
+      }
+
+      if (category === "cipher") {
+        const words = activeWordBank().filter((word) => word.length >= 4 && word.length <= 8 && /^[a-z]+$/.test(normalizeWord(word)));
+        const answer = normalizeWord(words[(level * 7) % words.length] || "casa");
+        const shift = (level % 4) + 1;
+        const alphabet = "abcdefghijklmnopqrstuvwxyz";
+        const encoded = [...answer].map((letter) => alphabet[(alphabet.indexOf(letter) + shift) % alphabet.length]).join("");
+        return {
+          prompt: localized(`Cada lletra s'ha avançat ${shift} posicions a l'alfabet. Quina era la paraula original?`, `Each letter was shifted forward ${shift} places in the alphabet. What was the original word?`, `Cada letra avanzó ${shift} posiciones en el alfabeto. ¿Cuál era la palabra original?`),
+          symbols: encoded.toLocaleUpperCase(currentLanguage), answer
+        };
+      }
+
+      if (category === "visualcount") {
+        const icons = ["◆", "●", "▲", "★", "■"];
+        const icon = icons[(level - 1) % icons.length];
+        const other = icons[level % icons.length];
+        const count = 4 + level;
+        const symbols = [...Array(count).fill(icon), ...Array(3).fill(other)].join(" ");
+        const answer = String(count);
+        return { prompt: localized(`Quantes figures ${icon} hi ha?`, `How many ${icon} shapes are there?`, `¿Cuántas figuras ${icon} hay?`), symbols, answer };
+      }
+
+      if (category === "directions") {
+        const moves = Array.from({ length: 3 + Math.min(level, 5) }, (_, index) => ["→", "↑", "←", "↓"][(index + level) % 4]);
+        const point = moves.reduce((position, move) => {
+          if (move === "→") position.x += 1;
+          if (move === "←") position.x -= 1;
+          if (move === "↑") position.y += 1;
+          if (move === "↓") position.y -= 1;
+          return position;
+        }, { x: 0, y: 0 });
+        return {
+          prompt: localized("Comences a (0, 0). On acabes després de seguir les fletxes?", "Start at (0, 0). Where do you end after following the arrows?", "Empiezas en (0, 0). ¿Dónde acabas después de seguir las flechas?"),
+          symbols: moves.join(" "), answer: `${point.x},${point.y}`
+        };
+      }
+
+      if (category === "weights") {
+        const first = level + 2;
+        const second = level * 2 + 3;
+        return {
+          prompt: localized(`Si ⚖️ A + B = ${first + second} kg i A pesa ${first} kg, quant pesa B?`, `If ⚖️ A + B = ${first + second} kg and A weighs ${first} kg, how much does B weigh?`, `Si ⚖️ A + B = ${first + second} kg y A pesa ${first} kg, ¿cuánto pesa B?`),
+          symbols: "A + B = ⚖️", answer: String(second)
+        };
+      }
+
+      if (category === "calendar") {
+        const dayNames = {
+          ca: ["dilluns", "dimarts", "dimecres", "dijous", "divendres", "dissabte", "diumenge"],
+          en: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          es: ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+        }[currentLanguage];
+        const start = (level * 3) % 7;
+        const days = level + 2;
+        const answer = dayNames[(start + days) % 7];
+        const options = [answer, dayNames[(start + days + 1) % 7], dayNames[(start + days + 3) % 7], dayNames[(start + days + 5) % 7]];
+        return {
+          prompt: localized(`Si avui és ${dayNames[start]}, quin dia serà d'aquí a ${days} dies?`, `If today is ${dayNames[start]}, what day will it be in ${days} days?`, `Si hoy es ${dayNames[start]}, ¿qué día será dentro de ${days} días?`),
+          options, answer
+        };
+      }
+
+      if (category === "mini-grid") {
+        const row = level % 4;
+        const col = (level * 3) % 4;
+        const answer = ((row * 2 + Math.floor(row / 2) + col) % 4) + 1;
+        const values = Array.from({ length: 4 }, (_, r) => Array.from({ length: 4 }, (_, c) => ((r * 2 + Math.floor(r / 2) + c) % 4) + 1));
+        values[row][col] = "?";
+        return {
+          prompt: localized("Completa la graella: cada fila, columna i quadrat de 2 × 2 conté l'1, el 2, el 3 i el 4.", "Complete the grid: each row, column, and 2 × 2 box contains 1, 2, 3, and 4.", "Completa la cuadrícula: cada fila, columna y cuadro de 2 × 2 contiene el 1, el 2, el 3 y el 4."),
+          symbols: values.map((line) => line.join("  ")).join("    "), answer: String(answer)
+        };
+      }
+
+      if (category === "shapes") {
+        const shapes = ["○", "□", "△", "◇"];
+        const step = (level % 3) + 1;
+        const symbols = Array.from({ length: 5 }, (_, index) => shapes[(index * step) % shapes.length]);
+        const answer = shapes[(5 * step) % shapes.length];
+        return {
+          prompt: localized("Quina figura continua el patró?", "Which shape continues the pattern?", "¿Qué figura continúa el patrón?"),
+          symbols: [...symbols, "?"].join(" "), options: shapes, answer
+        };
+      }
+
+      if (category === "wordlogic") {
+        const puzzles = {
+          ca: [
+            { q: "Tinc tecles però no obro panys. Què sóc?", a: ["Un piano", "Una porta", "Un mapa", "Una clau"], c: 0 },
+            { q: "Com més n'hi treus, més gran es fa. Què és?", a: ["Un forat", "Una caixa", "Una ombra", "Una muntanya"], c: 0 },
+            { q: "Té coll però no cap. Què és?", a: ["Una ampolla", "Una camisa", "Una girafa", "Una ampolla de tinta"], c: 0 }
+          ],
+          en: [
+            { q: "I have keys but open no locks. What am I?", a: ["A piano", "A door", "A map", "A key"], c: 0 },
+            { q: "The more you take away, the bigger it gets. What is it?", a: ["A hole", "A box", "A shadow", "A mountain"], c: 0 },
+            { q: "What has a neck but no head?", a: ["A bottle", "A shirt", "A giraffe", "A scarf"], c: 0 }
+          ],
+          es: [
+            { q: "Tengo teclas pero no abro cerraduras. ¿Qué soy?", a: ["Un piano", "Una puerta", "Un mapa", "Una llave"], c: 0 },
+            { q: "Cuanto más le quitas, más grande se hace. ¿Qué es?", a: ["Un agujero", "Una caja", "Una sombra", "Una montaña"], c: 0 },
+            { q: "¿Qué tiene cuello pero no cabeza?", a: ["Una botella", "Una camisa", "Una jirafa", "Una bufanda"], c: 0 }
+          ]
+        }[currentLanguage];
+        const puzzle = puzzles[(level - 1) % puzzles.length];
+        return { prompt: puzzle.q, options: puzzle.a, answer: puzzle.a[puzzle.c] };
+      }
+
+      if (category === "estimation") {
+        const a = level * 11 + 9;
+        const b = level * 7 + 4;
+        const answer = a + b;
+        const options = [answer, answer + level + 2, answer - level - 1, answer + 2 * level + 3].map(String);
+        return {
+          prompt: localized(`Sense calcular-ho exactament, quin és el resultat de ${a} + ${b}?`, `Estimate: what is ${a} + ${b}?`, `Sin calcularlo exactamente, ¿cuál es el resultado de ${a} + ${b}?`),
+          options, answer: String(answer)
+        };
+      }
+
+      if (category === "coordinates") {
+        const row = level % 4;
+        const col = (level * 3) % 4;
+        const grid = Array.from({ length: 4 }, (_, r) => Array.from({ length: 4 }, (_, c) => r * 4 + c + level + 1));
+        return {
+          prompt: localized(`Quin nombre hi ha a la casella ${"ABCD"[col]}${row + 1}?`, `Which number is in square ${"ABCD"[col]}${row + 1}?`, `¿Qué número hay en la casilla ${"ABCD"[col]}${row + 1}?`),
+          symbols: `    A   B   C   D\n${grid.map((line, index) => `${index + 1}   ${line.join("   ")}`).join("\n")}`,
+          answer: String(grid[row][col])
+        };
+      }
+
+      return { prompt: localized("Respon el repte.", "Solve the challenge.", "Resuelve el reto."), answer: "" };
+    }
+
+    let activeExtraChallenge = null;
+    function newExtraGame() {
+      const tab = tabs.find((item) => item.dataset.panel === currentCategory);
+      if (!tab || !EXTRA_GAME_IDS.includes(currentCategory)) return;
+      const titleNode = tab.querySelector("strong").firstChild;
+      const name = originalTexts.get(titleNode)?.trim() || tab.querySelector("strong").textContent;
+      document.getElementById("extra-title").textContent = translateValue(name);
+      document.getElementById("extra-description").textContent = tab.querySelector("small").textContent;
+      document.getElementById("extra-category-pill").textContent = translateValue("Repte");
+      document.getElementById("extra-level-label").textContent = `${translateValue("Nivell")} ${currentLevel} / ${LEVEL_COUNT}`;
+      activeExtraChallenge = createExtraChallenge(currentCategory, currentLevel);
+      document.getElementById("extra-prompt").textContent = activeExtraChallenge.prompt;
+      const symbols = document.getElementById("extra-symbols");
+      symbols.textContent = activeExtraChallenge.symbols || "";
+      symbols.hidden = !activeExtraChallenge.symbols;
+      const options = document.getElementById("extra-options");
+      options.replaceChildren();
+      const answerInput = document.getElementById("extra-input");
+      answerInput.value = "";
+      answerInput.disabled = false;
+      answerInput.type = "text";
+      answerInput.placeholder = translateValue("Escriu la resposta", currentLanguage);
+      answerInput.autocomplete = "off";
+      document.getElementById("extra-answer").hidden = Boolean(activeExtraChallenge.options);
+      document.getElementById("extra-feedback").textContent = "";
+      document.getElementById("extra-feedback").className = "extra-feedback";
+      document.querySelector('#extra-form button[type="submit"]').disabled = false;
+      if (activeExtraChallenge.options) {
+        activeExtraChallenge.options.forEach((choice) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "choice-button";
+          button.textContent = choice;
+          button.addEventListener("click", () => submitExtraAnswer(choice));
+          options.append(button);
+        });
+      } else {
+        answerInput.type = currentCategory === "anagrams" || currentCategory === "cipher" || currentCategory === "directions" ? "text" : "number";
+        answerInput.inputMode = answerInput.type === "number" ? "numeric" : "text";
+      }
+      translateTree();
+    }
+
+    function submitExtraAnswer(value) {
+      if (!activeExtraChallenge) return;
+      const normalize = (answer) => String(answer).trim().toLocaleLowerCase(currentLanguage).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "");
+      const correct = normalize(value) === normalize(activeExtraChallenge.answer);
+      const feedback = document.getElementById("extra-feedback");
+      if (!correct) {
+        feedback.textContent = translateValue("Resposta incorrecta. Torna-ho a provar.");
+        feedback.className = "extra-feedback error";
+        return;
+      }
+      feedback.textContent = translateValue("Correcte! Nivell completat.");
+      feedback.className = "extra-feedback success";
+      document.getElementById("extra-input").disabled = true;
+      document.querySelector('#extra-form button[type="submit"]').disabled = true;
+      document.querySelectorAll("#extra-options button").forEach((button) => {
+        button.disabled = true;
+        if (normalize(button.textContent) === normalize(activeExtraChallenge.answer)) button.classList.add("correct");
+      });
+      markLevelSolved();
+    }
+
+    document.getElementById("extra-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      submitExtraAnswer(document.getElementById("extra-input").value);
+    });
+    document.getElementById("extra-new-level").addEventListener("click", newExtraGame);
+
+    function shuffleGames(previousGame = "") {
+      const deck = [...selectedCategories];
+      if (deck.length < 2) throw new Error("El mode aleatori necessita dues categories com a mínim.");
+      for (let index = deck.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [deck[index], deck[swapIndex]] = [deck[swapIndex], deck[index]];
+      }
+      if (deck.length > 1 && deck[0] === previousGame) [deck[0], deck[1]] = [deck[1], deck[0]];
+      return deck;
+    }
+
+    function updateRandomStatus() {
+      const id = randomDeck[randomPosition];
+      const game = tabs.find((tab) => tab.dataset.panel === id);
+      const titleNode = game.querySelector("strong").firstChild;
+      const categoryName = originalTexts.get(titleNode)?.trim() || game.querySelector("strong").textContent;
+      const progress = currentLanguage === "en" ? "Challenge" : currentLanguage === "es" ? "Reto" : "Repte";
+      document.getElementById("random-status").textContent = `${progress} ${randomPosition + 1} ${currentLanguage === "en" ? "of" : "de"} ${randomDeck.length} · ${translateValue(categoryName)}`;
+    }
+
+    function startRandomMode() {
+      randomDeck = shuffleGames();
+      randomPosition = 0;
+      randomModeActive = true;
+      document.getElementById("start-random").hidden = true;
+      document.getElementById("next-random").hidden = false;
+      showGame(randomDeck[randomPosition], true);
+      updateRandomStatus();
+    }
+
+    function nextRandomGame() {
+      if (!randomModeActive) return;
+      if (randomPosition + 1 >= randomDeck.length) {
+        randomDeck = shuffleGames(randomDeck[randomPosition]);
+        randomPosition = 0;
+      } else {
+        randomPosition += 1;
+      }
+      showGame(randomDeck[randomPosition], true);
+      updateRandomStatus();
+    }
+
+    document.getElementById("start-random").addEventListener("click", startRandomMode);
+    document.getElementById("next-random").addEventListener("click", nextRandomGame);
+
+    gameInitializers = {
+      numbers: newNumberGame,
+      letters: newWordGame,
+      sudoku: renderSudoku,
+      escape: newEscapeGame,
+      memory: newMemoryGame,
+      sequence: newSequenceGame,
+      mastermind: newMastermindGame,
+      riddles: newRiddleGame,
+      arithmetic: newExtraGame,
+      anagrams: newExtraGame,
+      oddone: newExtraGame,
+      cipher: newExtraGame,
+      visualcount: newExtraGame,
+      directions: newExtraGame,
+      weights: newExtraGame,
+      calendar: newExtraGame,
+      "mini-grid": newExtraGame,
+      shapes: newExtraGame,
+      wordlogic: newExtraGame,
+      estimation: newExtraGame,
+      coordinates: newExtraGame
+    };
+
+    currentCategory = "numbers";
+    renderCategorySelection();
+    renderLevelPicker();
+    translationObserver.observe(document.body, { childList: true, subtree: true });
+    translateTree();
+    newNumberGame();
+    newWordGame();
+    renderSudoku();
+    newEscapeGame();
+    newMemoryGame();
+    newSequenceGame();
+    newMastermindGame();
+    newRiddleGame();
+    initializePreferences();
+  </script>
+</body>
+</html>
