@@ -10,6 +10,10 @@
       ["Calcula el perímetre del dibuix.", "Find the perimeter shown.", "Calcula el perímetro del dibujo."],
       ["Completa la graella i prem Comprova.", "Complete the grid and press Check.", "Completa la cuadrícula y pulsa Comprobar."],
       ["Peces disponibles", "Available pieces", "Piezas disponibles"],
+      ["Esborra el progrés i reinicia", "Clear progress and restart", "Borrar el progreso y reiniciar"],
+      ["Això esborrarà l'idioma, les categories desades i tot el progrés dels nivells. Vols continuar?", "This will clear the saved language, categories, and all level progress. Continue?", "Esto borrará el idioma, las categorías guardadas y todo el progreso de los niveles. ¿Quieres continuar?"],
+      ["S'han esborrat les dades. Reiniciant l'aplicació...", "App data cleared. Restarting...", "Datos borrados. Reiniciando la aplicación..."],
+      ["No s'han pogut esborrar les dades. Tanca altres pestanyes de l'aplicació i torna-ho a provar.", "Could not clear the app data. Close other app tabs and try again.", "No se pudieron borrar los datos. Cierra otras pestañas de la aplicación e inténtalo de nuevo."],
       ["Gira peça", "Rotate piece", "Girar pieza"],
       ["Accepta i col·loca", "Accept and place", "Aceptar y colocar"],
       ["Desfés darrera peça", "Undo last piece", "Deshacer última pieza"],
@@ -670,6 +674,29 @@
       }
     }
 
+    async function resetApplicationData() {
+      if (!window.confirm(translateValue("Això esborrarà l'idioma, les categories desades i tot el progrés dels nivells."))) return;
+      const resetButton = document.getElementById("reset-app");
+      resetButton.disabled = true;
+      try {
+        const database = await openPreferencesDatabase();
+        database.close();
+        databasePromise = undefined;
+        await new Promise((resolve, reject) => {
+          const request = window.indexedDB.deleteDatabase("el-raco-dels-enigmes");
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error || new Error("No s'han pogut esborrar les dades de l'aplicació."));
+          request.onblocked = () => reject(new Error("La base de dades està oberta en una altra pestanya."));
+        });
+        setPreferenceStatus(translateValue("S'han esborrat les dades. Reiniciant l'aplicació..."));
+        window.location.reload();
+      } catch (error) {
+        console.error("Error esborrant les dades de l'aplicació:", error);
+        setPreferenceStatus(translateValue("No s'han pogut esborrar les dades. Tanca altres pestanyes de l'aplicació i torna-ho a provar."));
+        resetButton.disabled = false;
+      }
+    }
+
     async function initializePreferences() {
       const languageSelect = document.getElementById("language-select");
       const selectAllButton = document.getElementById("select-all-categories");
@@ -748,6 +775,7 @@
       }
       savePreferences("Categories desades.");
     });
+    document.getElementById("reset-app").addEventListener("click", resetApplicationData);
 
     tabs.forEach((tab) => tab.addEventListener("click", () => {
       tabs.forEach((item) => item.setAttribute("aria-pressed", String(item === tab)));

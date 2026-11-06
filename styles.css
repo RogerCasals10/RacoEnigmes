@@ -82,6 +82,8 @@
     .category-option { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 13px; cursor: pointer; }
     .category-option input { width: 17px; height: 17px; accent-color: var(--green); }
     .category-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .reset-app-button { border-color: #dfbbb6; color: #8c3932; }
+    .reset-app-button:hover { border-color: #b94b40; background: #fae7e4; }
     .preferences-status { min-height: 20px; color: var(--muted); font-size: 13px; }
     .game-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 12px 0 20px; }
     .game-nav[hidden] { display: none; }
@@ -271,6 +273,8 @@
     .coordinate-grid.chess-board .mini-grid-cell.chess-light { background: #f2e7d5; color: #26332c; }
     .coordinate-grid.chess-board .mini-grid-cell.chess-dark { background: #718b79; color: white; }
     .coordinate-grid.chess-board .chess-square { border-radius: 0; cursor: pointer; font: inherit; }
+    .coordinate-grid.chess-board .mini-grid-cell.chess-piece-white { color: #fff; -webkit-text-stroke: 1px #202820; paint-order: stroke fill; text-shadow: 0 1px 1px rgb(0 0 0 / 45%); }
+    .coordinate-grid.chess-board .mini-grid-cell.chess-piece-black { color: #171a18; -webkit-text-stroke: .35px #171a18; }
     .coordinate-grid.chess-board .chess-square:hover:not(:disabled) { filter: brightness(1.12); }
     .coordinate-grid.chess-board .chess-square.chess-selected { outline: 3px solid var(--gold); outline-offset: -4px; }
     .extra-answer { display: flex; flex-wrap: wrap; gap: 9px; }

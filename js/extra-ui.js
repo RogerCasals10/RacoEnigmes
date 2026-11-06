@@ -309,6 +309,8 @@
               const chessSquare = document.createElement("button");
               chessSquare.type = "button";
               chessSquare.className = `mini-grid-cell interactive-cell chess-square ${(row + col) % 2 === 0 ? "chess-light" : "chess-dark"}`;
+              if ("♙♘♗♖♕♔".includes(piece)) chessSquare.classList.add("chess-piece-white");
+              else if ("♟♞♝♜♛♚".includes(piece)) chessSquare.classList.add("chess-piece-black");
               chessSquare.textContent = piece;
               chessSquare.dataset.square = square;
               chessSquare.setAttribute("role", "gridcell");
