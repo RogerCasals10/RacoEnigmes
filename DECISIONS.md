@@ -146,13 +146,15 @@ S'actualitza després de cada resposta; les decisions pendents no s'han d'endevi
 
 - Reptes d'escacs.
 - Geometria: donar una figura amb dades i calcular-ne el perímetre. El nivell 1 és la figura en forma de T compartida per l'usuari: amplada superior 14 cm, gruix superior 4 cm, alçada total 10 cm i amplada del tronc 4 cm; resposta 48 cm.
-- Reconeixement de figures a partir de l'alçat, la planta i el perfil.
+- Reconeixement de figures a partir de l'alçat, la planta i el perfil; la planta només mostra les caselles ocupades i cal combinar la fila i columna de més alçada de les altres vistes per trobar la pila més alta.
+- Vistes 3D: retirar els valors de la planta, fer que s'hagi de trobar la casella més alta creuant alçat, perfil i planta, i dibuixar les piles del mateix nivell com un únic contorn sense línies internes.
 - Nonogrames: deduir una imatge a partir de pistes numèriques per files i columnes.
 - Graelles de deducció: relacionar persones, objectes i dades amb pistes lògiques.
 - Miralls i raigs làser: orientar miralls per conduir un feix fins a l'objectiu.
 - Reptes amb llumins: moure o treure peces per corregir igualtats i figures.
 - Tessel·lacions: cobrir una forma amb peces sense solapaments ni espais buits.
 - Estat: Vistes 3D, Nonogrames, Graelles de deducció, Miralls i raigs làser, Reptes amb llumins i Tessel·lacions implementats i provats amb 10 nivells cadascun.
+- Escacs tàctics: substituir les preguntes d'opció múltiple per posicions tàctiques de 10 nivells; l'usuari selecciona una peça blanca i la casella de destí, i cada solució explica la idea tàctica.
 - Nonogrames: graelles interactives amb pistes calculades a partir de la solució; comprovada la unicitat dels 10 puzzles.
 - Geometria: reptes visuals amb diagrames SVG, sense explicacions textuals; el nivell 1 és el triangle i el nivell 2 és la figura T compartida per l'usuari (14 cm, 4 cm, 10 cm i 4 cm; resposta 48 cm).
 - Dificultat de Geometria: mantenir quatre opcions als nivells 1–3 i demanar que s'escrigui la resposta del nivell 4 en endavant.
@@ -161,3 +163,22 @@ S'actualitza després de cada resposta; les decisions pendents no s'han d'endevi
 ## Pendents de valorar, un per un
 
 - Caçaparaules
+
+## Organització del codi
+
+- Mantenir l'estructura HTML a `index.html` i els estils a `styles.css`.
+- Desar cada minijoc en un fitxer independent dins de `js/games/`; compartir navegació, preferències, renderització genèrica i reptes comuns a fitxers separats dins de `js/`.
+- Carregar els scripts clàssics en ordre des de `index.html` perquè l'aplicació també continuï funcionant en obrir el fitxer localment, sense servidor ni compilació.
+- Estat: separació aplicada i comprovada per als 27 minijocs.
+
+## Millores demanades als escacs
+
+- Fer els reptes més difícils i eliminar les opcions múltiples.
+- Permetre seleccionar la peça i la casella de destí directament al tauler.
+- Incloure tàctiques diverses amb cavalls, alfils, torres, dames i promoció, i explicar el perquè de la millor jugada quan es resol.
+- Estat: implementat i comprovat localment en català, anglès i castellà per als 10 nivells; totes les jugades són legals i la solució mou la peça al tauler abans d'explicar la tàctica.
+
+## Prioritat següent del projecte
+
+- Abans de decidir més minijocs o nivells, centrar les properes sessions a fer l'aplicació més jugable i agradable: claredat de la interfície, ús mòbil, instruccions, feedback i navegació. Revisar els reptes existents quan una pista reveli directament la resposta o faci irrellevants les altres vistes.
+- Prioritzar les observacions de l'usuari mentre prova els jocs i fer millores d'usabilitat sobre els continguts nous.
