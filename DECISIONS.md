@@ -139,7 +139,8 @@ S'actualitza després de cada resposta; les decisions pendents no s'han d'endevi
 - Al mode aleatori, amagar la selecció de nivells i els minijocs mentre s'hi juga.
 - Fer que la selecció de categories aleatòries sigui un desplegable, tancat inicialment.
 - En seleccionar una categoria, amagar el menú de minijocs i mostrar el joc; afegir un botó per tornar al menú.
-- Estat: canvis aplicats localment; pendent de revisió abans de publicar.
+- Mantenir una barra superior fixa/sticky de «Categories» durant el joc i fixar «Següent nivell» al peu de pantalla, també en mòbil.
+- Estat: implementat i comprovat en mòbil; la barra de categories, el selector de nivells i el botó fix de «Següent nivell» funcionen.
 
 ## Idees de nous minijocs
 
@@ -151,9 +152,11 @@ S'actualitza després de cada resposta; les decisions pendents no s'han d'endevi
 - Miralls i raigs làser: orientar miralls per conduir un feix fins a l'objectiu.
 - Reptes amb llumins: moure o treure peces per corregir igualtats i figures.
 - Tessel·lacions: cobrir una forma amb peces sense solapaments ni espais buits.
-- Estat de la figura T: implementada com a nivell 1 de Geometria, amb diagrama vectorial accessible i explicació del càlcul en català, anglès i castellà.
+- Estat: Vistes 3D, Nonogrames, Graelles de deducció, Miralls i raigs làser, Reptes amb llumins i Tessel·lacions implementats i provats amb 10 nivells cadascun.
+- Nonogrames: graelles interactives amb pistes calculades a partir de la solució; comprovada la unicitat dels 10 puzzles.
+- Geometria: reptes visuals amb diagrames SVG, sense explicacions textuals; el nivell 1 és el triangle i el nivell 2 és la figura T compartida per l'usuari (14 cm, 4 cm, 10 cm i 4 cm; resposta 48 cm).
 - Dificultat de Geometria: mantenir quatre opcions als nivells 1–3 i demanar que s'escrigui la resposta del nivell 4 en endavant.
-- Joc de perímetres ampliat i provat: 30 nivells progressius, des de polígons fins a entrants i forats, figures compostes, escala i circumferències.
+- Joc de perímetres ampliat i comprovat: 30 nivells progressius, des de polígons fins a entrants i forats, figures compostes, escala i circumferències.
 
 ## Pendents de valorar, un per un
 
