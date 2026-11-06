@@ -18,7 +18,7 @@ function createLaserChallenge(category, level) {
         let col = 0;
         let dx = 1;
         let dy = 0;
-        grid[row][col] = "S";
+        grid[row][col] = "→";
         let exit = "";
         for (let step = 0; step < 100; step += 1) {
           col += dx;
@@ -32,8 +32,6 @@ function createLaserChallenge(category, level) {
             grid[row][col] = mirror;
             if (mirror === "/") [dx, dy] = [-dy, -dx];
             else [dx, dy] = [dy, dx];
-          } else if (grid[row][col] === "·") {
-            grid[row][col] = "•";
           }
         }
         const exits = {

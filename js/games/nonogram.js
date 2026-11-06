@@ -12,17 +12,18 @@ function createNonogramChallenge(category, level) {
           ["10101", "01110", "11111", "01110", "10101"]
         ];
         const solution = patterns[level - 1].map((row) => [...row].map((cell) => cell === "1"));
-        const runLengths = (line) => line.map(Number).join("").split("0").filter(Boolean).map((run) => run.length).join(" ") || "–";
-        const rows = solution.map(runLengths);
-        const columns = solution[0].map((_, col) => runLengths(solution.map((row) => row[col])));
-        const clues = localized(
-          `Toca les caselles per pintar-les segons les pistes. Prem «Comprova» quan acabis.\nFiles (de dalt a baix): ${rows.join(" | ")}\nColumnes (d'esquerra a dreta): ${columns.join(" | ")}`,
-          `Tap cells to fill them using the clues. Press Check when finished.\nRows (top to bottom): ${rows.join(" | ")}\nColumns (left to right): ${columns.join(" | ")}`,
-          `Toca las casillas para rellenarlas según las pistas. Pulsa «Comprobar» al terminar.\nFilas (de arriba abajo): ${rows.join(" | ")}\nColumnas (de izquierda a derecha): ${columns.join(" | ")}`
-        );
+        const runLengths = (line) => line.map(Number).join("").split("0").filter(Boolean).map((run) => run.length);
+        const rowClues = solution.map(runLengths);
+        const columnClues = solution[0].map((_, col) => runLengths(solution.map((row) => row[col])));
         return {
-          prompt: clues,
+          prompt: localized(
+            "Pinta les caselles seguint les pistes de cada fila i columna. Quan creguis que has descobert la imatge, comprova la solució.",
+            "Fill the cells using the clues for each row and column. When you think you have revealed the picture, check your solution.",
+            "Rellena las casillas siguiendo las pistas de cada fila y columna. Cuando creas que has descubierto la imagen, comprueba la solución."
+          ),
           interactiveGrid: solution,
+          nonogramRowClues: rowClues,
+          nonogramColumnClues: columnClues,
           answer: solution.map((row) => row.map(Number).join("")).join("/")
         };
 

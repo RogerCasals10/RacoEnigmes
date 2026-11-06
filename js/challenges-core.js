@@ -166,7 +166,6 @@
         "geometry": createGeometryChallenge,
         "laser": createLaserChallenge,
         "logic-grid": createLogicGridChallenge,
-        "matchsticks": createMatchsticksChallenge,
         "mini-grid": createMiniGridChallenge,
         "nonogram": createNonogramChallenge,
         "oddone": createOddoneChallenge,

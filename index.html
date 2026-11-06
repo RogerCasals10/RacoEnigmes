@@ -33,7 +33,7 @@
         <h1 id="page-title">Pensa, prova,<br>desxifra.</h1>
         <p class="hero-copy">Minijocs d'enginy per jugar al teu ritme. Tria un repte i posa les neurones en marxa.</p>
       </div>
-      <div class="daily-badge"><span aria-hidden="true">✳</span> 21 categories · cap pressa</div>
+      <div class="daily-badge"><span aria-hidden="true">✳</span> 26 categories · cap pressa</div>
     </section>
 
     <details class="category-settings" id="category-settings">
@@ -84,17 +84,28 @@
       <button class="game-tab" data-panel="nonogram" aria-pressed="false"><span class="game-icon" aria-hidden="true">▦</span><span><strong>Nonogrames</strong><small>Descobreix la imatge</small></span></button>
       <button class="game-tab" data-panel="logic-grid" aria-pressed="false"><span class="game-icon" aria-hidden="true">⊞</span><span><strong>Graelles de deducció</strong><small>Creua les pistes</small></span></button>
       <button class="game-tab" data-panel="laser" aria-pressed="false"><span class="game-icon" aria-hidden="true">↗</span><span><strong>Miralls i raigs làser</strong><small>Guia el feix</small></span></button>
-      <button class="game-tab" data-panel="matchsticks" aria-pressed="false"><span class="game-icon" aria-hidden="true">╱</span><span><strong>Reptes amb llumins</strong><small>Canvia una peça</small></span></button>
       <button class="game-tab" data-panel="tiling" aria-pressed="false"><span class="game-icon" aria-hidden="true">⬡</span><span><strong>Tessel·lacions</strong><small>Encaixa les peces</small></span></button>
     </nav>
 
     <section class="level-picker" id="level-picker" aria-label="Nivells de la categoria" hidden>
-      <div class="level-heading"><strong id="level-category-name">Nivells</strong><span id="current-level-label"></span><span id="level-progress">0 / 20 resolts</span></div>
-      <button class="button" type="button" id="level-list-toggle" aria-expanded="false" aria-controls="level-list" data-i18n="Tria un nivell">Tria un nivell</button>
+      <div class="level-heading">
+        <strong id="level-category-name">Nivells</strong>
+        <div class="level-current">
+          <span id="current-level-label"></span>
+          <button class="button" type="button" id="restart-level"><span aria-hidden="true">↻</span><span data-i18n="Reinicia el nivell">Reinicia el nivell</span></button>
+        </div>
+        <span id="level-progress">0 / 20 resolts</span>
+      </div>
+      <div class="level-controls">
+        <button class="button" type="button" id="level-list-toggle" aria-expanded="false" aria-controls="level-list">
+          <span class="level-toggle-icon" aria-hidden="true">▦</span>
+          <span id="level-list-toggle-label">Veure nivells</span>
+          <span class="level-toggle-chevron" aria-hidden="true">⌄</span>
+        </button>
+        <button class="button" type="button" id="choose-game" data-i18n="Tria un altre joc">Tria un altre joc</button>
+      </div>
       <div class="level-list" id="level-list" hidden></div>
       <div class="level-actions">
-        <button class="button" type="button" id="choose-game" data-i18n="Tria un altre joc">Tria un altre joc</button>
-        <button class="button" type="button" id="restart-level" data-i18n="Reinicia el nivell">Reinicia el nivell</button>
         <button class="button primary" type="button" id="next-level" hidden data-i18n="Següent nivell">Següent nivell</button>
       </div>
     </section>
@@ -272,7 +283,6 @@
   <script src="js/games/geometry.js"></script>
   <script src="js/games/laser.js"></script>
   <script src="js/games/logic-grid.js"></script>
-  <script src="js/games/matchsticks.js"></script>
   <script src="js/games/mini-grid.js"></script>
   <script src="js/games/nonogram.js"></script>
   <script src="js/games/oddone.js"></script>

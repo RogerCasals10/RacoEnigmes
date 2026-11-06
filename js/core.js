@@ -5,13 +5,23 @@
       ["El Racó dels Enigmes", "The Puzzle Corner", "El Rincón de los Enigmas"],
       ["Categories", "Categories", "Categorías"],
       ["Tria un nivell", "Choose a level", "Elige un nivel"],
+      ["Veure nivells", "Browse levels", "Ver niveles"],
+      ["Amaga nivells", "Hide levels", "Ocultar niveles"],
       ["Calcula el perímetre del dibuix.", "Find the perimeter shown.", "Calcula el perímetro del dibujo."],
       ["Completa la graella i prem Comprova.", "Complete the grid and press Check.", "Completa la cuadrícula y pulsa Comprobar."],
-      ["Toca dues caselles veïnes per posar cada dòmino.", "Tap two neighboring squares to place each domino.", "Toca dos casillas vecinas para colocar cada dominó."],
+      ["Peces disponibles", "Available pieces", "Piezas disponibles"],
+      ["Gira peça", "Rotate piece", "Girar pieza"],
+      ["Accepta i col·loca", "Accept and place", "Aceptar y colocar"],
+      ["Desfés darrera peça", "Undo last piece", "Deshacer última pieza"],
+      ["Peça seleccionada: tria una casella d'inici.", "Piece selected: choose a starting square.", "Pieza seleccionada: elige una casilla de inicio."],
+      ["Selecciona una peça abans de triar una casella.", "Select a piece before choosing a square.", "Selecciona una pieza antes de elegir una casilla."],
+      ["La peça no hi cap en aquesta posició.", "The piece does not fit in this position.", "La pieza no cabe en esta posición."],
+      ["Peça girada. Tria una casella d'inici.", "Piece rotated. Choose a starting square.", "Pieza girada. Elige una casilla de inicio."],
+      ["Peça col·locada.", "Piece placed.", "Pieza colocada."],
       ["Fila", "Row", "Fila"],
       ["columna", "column", "columna"],
-      ["Tria dues caselles veïnes.", "Choose two neighboring squares.", "Elige dos casillas vecinas."],
       ["Mesures del dibuix", "Diagram measurements", "Medidas del dibujo"],
+      ["Graella de nonograma amb pistes de files i columnes.", "Nonogram grid with row and column clues.", "Cuadrícula de nonograma con pistas de filas y columnas."],
       ["Planta, alçat i perfil d'una estructura de cubs.", "Top, front, and side views of a stack of cubes.", "Planta, alzado y perfil de una estructura de cubos."],
       ["Tria un altre joc", "Choose another game", "Elige otro juego"],
       ["Càlcul mental", "Mental maths", "Cálculo mental"],
@@ -50,8 +60,6 @@
       ["Creua les pistes", "Cross-reference the clues", "Cruza las pistas"],
       ["Miralls i raigs làser", "Mirrors and laser beams", "Espejos y rayos láser"],
       ["Guia el feix", "Guide the beam", "Guía el rayo"],
-      ["Reptes amb llumins", "Matchstick puzzles", "Retos con cerillas"],
-      ["Canvia una peça", "Move one match", "Mueve una cerilla"],
       ["Tessel·lacions", "Tessellations", "Teselaciones"],
       ["Encaixa les peces", "Fit the pieces", "Encaja las piezas"],
       ["Nivells", "Levels", "Niveles"],
@@ -79,7 +87,7 @@
       ["Pensa, prova,", "Think, try,", "Piensa, prueba,"],
       ["desxifra.", "and solve.", "y descifra."],
       ["Minijocs d'enginy per jugar al teu ritme. Tria un repte i posa les neurones en marxa.", "Brain-teasing mini-games to play at your own pace. Pick a challenge and get thinking.", "Minijuegos de ingenio para jugar a tu ritmo. Elige un reto y pon las neuronas en marcha."],
-      ["21 categories · cap pressa", "21 categories · no rush", "21 categorías · sin prisa"],
+      ["26 categories · cap pressa", "26 categories · no rush", "26 categorías · sin prisa"],
       ["Idioma", "Language", "Idioma"],
       ["Categories del mode aleatori", "Random mode categories", "Categorías del modo aleatorio"],
       ["Tria com a mínim dues categories. La selecció es desa al teu navegador.", "Choose at least two categories. Your selection is saved in this browser.", "Elige al menos dos categorías. La selección se guarda en este navegador."],
@@ -415,7 +423,7 @@
     const tabs = [...document.querySelectorAll(".game-tab")];
     const panels = [...document.querySelectorAll(".game-panel")];
     const gameIds = tabs.map((tab) => tab.dataset.panel);
-    const EXTRA_GAME_IDS = ["arithmetic", "anagrams", "oddone", "cipher", "directions", "weights", "calendar", "mini-grid", "shapes", "riddles", "estimation", "coordinates", "chess", "geometry", "projections", "nonogram", "logic-grid", "laser", "matchsticks", "tiling"];
+    const EXTRA_GAME_IDS = ["arithmetic", "anagrams", "oddone", "cipher", "directions", "weights", "calendar", "mini-grid", "shapes", "riddles", "estimation", "coordinates", "chess", "geometry", "projections", "nonogram", "logic-grid", "laser", "tiling"];
     const LEVEL_COUNT = 10;
     const CATEGORY_VERSION = 5;
     let selectedCategories = [...gameIds];
@@ -507,6 +515,7 @@
       picker.hidden = false;
       list.hidden = !levelPickerExpanded;
       document.getElementById("level-list-toggle").setAttribute("aria-expanded", String(levelPickerExpanded));
+      document.getElementById("level-list-toggle-label").textContent = translateValue(levelPickerExpanded ? "Amaga nivells" : "Veure nivells");
       document.getElementById("current-level-label").textContent = `${translateValue("Nivell")} ${currentLevel} / ${categoryLevelCount(currentCategory)}`;
       const tab = tabs.find((item) => item.dataset.panel === currentCategory);
       const titleNode = tab.querySelector("strong").firstChild;
@@ -521,8 +530,8 @@
       for (let level = 1; level <= total; level += 1) {
         const button = document.createElement("button");
         button.type = "button";
-        button.className = `level-button${solved.has(level) ? " completed" : ""}`;
-        button.textContent = solved.has(level) ? "✓" : String(level);
+        button.className = `level-button${solved.has(level) ? " completed" : ""}${level > unlocked ? " locked" : ""}`;
+        button.textContent = String(level);
         button.disabled = level > unlocked;
         button.setAttribute("aria-label", `${translateValue("Nivell")} ${level} · ${translateValue(level > unlocked ? "Bloquejat" : solved.has(level) ? "Resolts" : "Desbloquejat")}`);
         button.setAttribute("aria-pressed", String(currentLevel === level));

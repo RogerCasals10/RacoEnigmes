@@ -107,23 +107,33 @@
     .game-tab strong, .game-tab small { display: block; }
     .game-tab strong { font-size: 14px; }
     .game-tab small { margin-top: 2px; color: var(--muted); font-size: 12px; }
-    .level-picker { margin: 0 0 20px; padding: 17px 19px; border: 1px solid var(--line); border-radius: 17px; background: var(--card); }
+    .level-picker { margin: 0 0 20px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); box-shadow: 0 8px 26px rgb(42 39 29 / 4%); }
     .level-picker[hidden] { display: none; }
-    .level-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+    .level-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-bottom: 12px; }
     .level-heading strong { font-size: 15px; }
     .level-heading span { color: var(--muted); font-size: 13px; }
+    .level-current { display: flex; align-items: center; gap: 5px; }
+    .level-current #current-level-label { padding: 6px 11px; border-radius: 10px; background: var(--green-pale); color: var(--green-dark); font-size: 13px; font-weight: 800; white-space: nowrap; }
+    #restart-level { min-height: 34px; gap: 6px; padding: 5px 9px; border-color: transparent; background: transparent; color: var(--muted); font-size: 13px; }
+    #restart-level:hover { background: #f3f1eb; color: var(--ink); }
+    .level-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    #level-list-toggle { min-height: 44px; gap: 10px; padding: 8px 14px; border-color: #d7e2d8; border-radius: 12px; background: var(--green-pale); color: var(--green-dark); }
+    #level-list-toggle:hover, #level-list-toggle[aria-expanded="true"] { border-color: #b8cdbb; background: #dce8de; }
+    .level-toggle-icon { font-size: 16px; }
+    .level-toggle-chevron { display: inline-block; margin-left: 3px; font-size: 17px; line-height: 1; transition: transform .18s ease; }
+    #level-list-toggle[aria-expanded="true"] .level-toggle-chevron { transform: rotate(180deg); }
+    #choose-game { border-color: transparent; background: transparent; color: var(--muted); }
+    #choose-game:hover { background: #f3f1eb; color: var(--ink); }
     .level-picker .level-list[hidden] { display: none; }
-    .level-picker .level-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
-    .level-button { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid var(--line); border-radius: 11px; background: white; font-weight: 750; cursor: pointer; }
-    .level-button:hover:not(:disabled) { border-color: var(--green); }
+    .level-picker .level-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 9px; margin: 14px 0 0; padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: #f8f7f2; }
+    .level-button { position: relative; display: grid; width: 100%; max-width: 58px; aspect-ratio: 1; place-items: center; justify-self: start; padding: 0; border: 1px solid #e4e3dc; border-radius: 14px; background: white; font-size: 15px; font-weight: 750; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+    .level-button:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--green); box-shadow: 0 5px 12px rgb(42 39 29 / 9%); }
     .level-button[aria-pressed="true"] { border-color: var(--green); background: var(--green); color: white; }
-    .level-button.completed { border-color: #c4d6c6; background: var(--green-pale); color: var(--green-dark); }
-    .level-button:disabled { opacity: .42; cursor: not-allowed; }
+    .level-button.completed:not([aria-pressed="true"]) { border-color: #c4d6c6; background: var(--green-pale); color: var(--green-dark); }
+    .level-button.completed::after { position: absolute; top: -3px; right: -3px; width: 10px; height: 10px; border: 2px solid var(--card); border-radius: 50%; background: var(--green); content: ""; }
+    .level-button:disabled { border-style: dashed; background: #f0efea; color: #a4a59e; cursor: not-allowed; }
     .level-actions { display: flex; flex-wrap: wrap; gap: 9px; }
     #next-level:not([hidden]) { position: fixed; right: max(18px, env(safe-area-inset-right)); bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 40; min-height: 52px; padding-inline: 22px; box-shadow: 0 8px 26px rgb(26 39 30 / 24%); }
-    #level-list-toggle[aria-expanded="true"]::after { content: " −"; }
-    #level-list-toggle[aria-expanded="false"]::after { content: " +"; }
-
     main { padding-bottom: 110px; }
     .game-panel { min-height: 450px; padding: clamp(22px, 4vw, 38px); border: 1px solid var(--line); border-radius: 22px; background: var(--card); box-shadow: var(--shadow); }
     .game-panel[hidden] { display: none; }
@@ -217,13 +227,42 @@
     .extra-prompt { margin: 18px 0; font-size: clamp(18px, 3vw, 23px); font-weight: 700; }
     .extra-symbols { margin: 18px 0; color: var(--green-dark); font-size: clamp(24px, 5vw, 38px); letter-spacing: .12em; overflow-wrap: anywhere; white-space: pre-wrap; }
     .extra-symbols.geometry-diagram, .extra-symbols.projection-diagram { display: block; width: min(100%, 630px); margin-inline: auto; overflow: visible; }
+    .geometry-measurement rect { fill: var(--card); stroke: #b8cdbb; stroke-width: 1.5; }
+    .geometry-measurement text { fill: var(--green-dark); font-size: 12px; font-weight: 800; letter-spacing: 0; text-anchor: middle; }
     .projection-answer-square { cursor: pointer; }
     .projection-answer-square:hover { stroke: var(--gold); stroke-width: 3px; }
     .extra-symbols.nonogram-grid, .extra-symbols.tiling-grid { display: grid; width: min(100%, 360px); max-width: 100%; margin-inline: auto; grid-template-columns: repeat(var(--grid-size), minmax(0, 1fr)); gap: 3px; letter-spacing: 0; white-space: normal; }
+    .tiling-workbench { width: min(100%, 560px); margin: 18px 0; }
+    .tiling-workbench .tiling-grid { margin-bottom: 20px; }
+    .tiling-workbench .interactive-cell { border-color: #b7c1b6; }
+    .tiling-workbench .interactive-cell.tile-covered { border-color: rgb(255 255 255 / 75%); background: var(--piece-color); }
+    .tiling-workbench .interactive-cell.tile-preview-valid { outline: 3px solid var(--green); outline-offset: -3px; background: #dce9df; }
+    .tiling-workbench .interactive-cell.tile-preview-invalid { outline: 3px solid var(--red); outline-offset: -3px; background: #fae7e4; }
+    .tiling-tray-label { margin: 0 0 8px; color: var(--muted); font-size: 13px; font-weight: 750; }
+    .tiling-piece-tray { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tiling-piece-option { display: flex; min-width: 68px; min-height: 78px; flex-direction: column; align-items: center; justify-content: center; gap: 7px; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: white; color: var(--ink); cursor: pointer; }
+    .tiling-piece-option:hover:not(:disabled), .tiling-piece-option.is-selected { border-color: var(--green); background: var(--green-pale); }
+    .tiling-piece-option.is-selected { box-shadow: 0 0 0 2px var(--green); }
+    .tiling-piece-option:disabled { cursor: default; opacity: .48; }
+    .tiling-piece-option.is-placed { border-color: var(--green); background: #e4eee5; }
+    .tiling-piece-visual { display: grid; grid-template-columns: repeat(var(--piece-width), 13px); grid-template-rows: repeat(var(--piece-height), 13px); gap: 1px; }
+    .tiling-piece-cell { border: 1px solid rgb(0 0 0 / 15%); border-radius: 2px; background: var(--piece-color); }
+    .tiling-piece-label { font-size: 12px; font-weight: 750; }
+    .tiling-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .tiling-action { min-height: 42px; }
+    .tiling-action:disabled { cursor: default; opacity: .5; }
+    .extra-symbols.nonogram-grid { width: min(100%, 460px); grid-template-columns: minmax(2.6rem, max-content) repeat(var(--grid-size), minmax(0, 1fr)); grid-template-rows: auto repeat(var(--grid-size), minmax(0, 1fr)); gap: 3px; align-items: stretch; padding: 10px; border: 1px solid var(--line); border-radius: 16px; background: #f8f7f2; box-shadow: 0 10px 24px rgb(42 39 29 / 6%); }
+    .nonogram-corner { border-bottom: 2px solid #d6d8d0; }
+    .nonogram-line-clue { display: flex; align-items: center; justify-content: center; gap: 4px; border-radius: 8px; color: var(--ink); font-size: clamp(12px, 3.5vw, 16px); font-weight: 800; transition: background .15s ease, color .15s ease; }
+    .nonogram-column-clue { min-height: 52px; flex-direction: column; justify-content: flex-end; padding: 5px 0 8px; border-bottom: 2px solid #d6d8d0; }
+    .nonogram-row-clue { justify-content: flex-end; padding: 0 7px; }
+    .nonogram-line-clue.is-solved { background: #e4eee5; color: var(--green-dark); }
+    .nonogram-cell { width: 100%; border: 1px solid #c8cec5; border-radius: 5px; background: #fffefa; cursor: pointer; transition: background .12s ease, border-color .12s ease, transform .12s ease; }
+    .nonogram-cell:hover { z-index: 1; transform: scale(1.05); border-color: var(--gold); }
+    .nonogram-cell[aria-pressed="true"] { border-color: #274836; background: #355d4b; box-shadow: inset 0 0 0 2px rgb(255 255 255 / 14%); }
     .interactive-cell { display: grid; min-width: 0; aspect-ratio: 1; place-items: center; padding: 0; border: 1px solid #aeb9af; border-radius: 3px; background: white; color: var(--ink); font-size: clamp(12px, 3vw, 18px); font-weight: 750; }
     .interactive-cell[aria-pressed="true"], .interactive-cell.tile-covered { border-color: var(--green-dark); background: var(--green); color: white; }
     .interactive-cell.tile-blocked { border-color: transparent; background: transparent; pointer-events: none; }
-    .interactive-cell.tile-selected { outline: 3px solid var(--gold); outline-offset: -3px; }
     .extra-symbols.mini-grid, .extra-symbols.coordinate-grid { display: grid; width: min(100%, 420px); max-width: 100%; margin-inline: auto; grid-template-columns: repeat(var(--grid-size), minmax(0, 1fr)); border: 2px solid var(--green-dark); border-radius: 10px; overflow: hidden; background: white; font-size: clamp(20px, 5vw, 30px); letter-spacing: 0; white-space: normal; }
     .mini-grid-cell { display: grid; aspect-ratio: 1; place-items: center; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); font-weight: 750; }
     .mini-grid-cell.box-right { border-right: 3px solid var(--green-dark); }
@@ -284,5 +323,19 @@
       .panel-heading { flex-direction: column; }
       .game-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .game-toolbar { top: 0; }
+      .level-picker { padding: 12px; }
+      .level-heading { gap: 6px 10px; }
+      .level-heading strong { flex: 1 1 100%; }
+      .level-current { margin-right: auto; }
+      .level-controls { gap: 4px; }
+      .level-controls .button { min-height: 38px; padding: 7px 10px; font-size: 13px; }
+      .level-picker .level-list { grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 7px; padding: 10px; }
+      .level-button { max-width: 54px; border-radius: 12px; }
+      .extra-symbols.nonogram-grid { width: min(100%, 420px); padding: 7px; grid-template-columns: minmax(2.25rem, max-content) repeat(var(--grid-size), minmax(0, 1fr)); gap: 2px; }
+      .nonogram-column-clue { min-height: 44px; }
+      .nonogram-row-clue { padding-inline: 5px; }
+      .tiling-piece-tray { gap: 6px; }
+      .tiling-piece-option { min-width: 60px; min-height: 72px; }
+      .tiling-actions .button { flex: 1 1 auto; }
       #next-level:not([hidden]) { right: 12px; bottom: calc(10px + env(safe-area-inset-bottom)); left: 12px; width: calc(100% - 24px); }
     }

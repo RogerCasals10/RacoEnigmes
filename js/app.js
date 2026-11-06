@@ -73,7 +73,6 @@
       nonogram: newExtraGame,
       "logic-grid": newExtraGame,
       laser: newExtraGame,
-      matchsticks: newExtraGame,
       tiling: newExtraGame
     };
 

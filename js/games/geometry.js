@@ -156,13 +156,45 @@ function createGeometryChallenge(category, level) {
             explanation: { ca: "El costat compartit no forma part del contorn. Queden tres costats del rectangle (14 + 7 + 7 = 28 cm) i l'arc del semicercle (22 cm): 50 cm.", en: "The shared side is not on the outside boundary. The three exposed rectangle sides total 14 + 7 + 7 = 28 cm, and the semicircle arc is 22 cm: 50 cm.", es: "El lado compartido no forma parte del contorno. Quedan tres lados del rectángulo (14 + 7 + 7 = 28 cm) y el arco del semicírculo (22 cm): 50 cm." }
           }
         ];
+        const diagramMeasurements = [
+          ["14 cm", "4 cm", "5 cm", "6 cm", "6 cm", "5 cm", "4 cm", "4 cm"],
+          ["7 cm", "9 cm", "12 cm"],
+          ["11 cm", "11 cm", "11 cm", "11 cm"],
+          ["14 cm", "9 cm", "14 cm", "9 cm"],
+          ["7 cm", "7 cm", "7 cm", "7 cm", "7 cm", "7 cm"],
+          ["8 cm", "12 cm", "7 cm", "15 cm"],
+          ["9 cm", "12 cm", "15 cm"],
+          ["20 cm", "11 cm", "20 cm", "11 cm"],
+          ["14 cm", "10 cm", "4 cm", "3 cm"],
+          ["3,5 cm"],
+          ["18 cm", "11 cm", "5 cm", "3 cm"],
+          ["20 cm", "13 cm", "6 cm", "4 cm"],
+          ["12 cm", "3 cm", "5 cm"],
+          ["13 cm", "10 cm"],
+          ["4,5 cm"],
+          ["24 cm", "15 cm", "5 cm", "3 cm", "4 cm", "2 cm"],
+          ["20 cm", "14 cm", "8 cm", "5 cm"],
+          ["30 cm", "20 cm", "12 cm", "8 cm"],
+          ["54 cm", "× 5/3"],
+          [localized("proporció 3:2", "ratio 3:2", "proporción 3:2"), localized("àrea 216 cm²", "area 216 cm²", "área 216 cm²")],
+          ["8 cm", "5 cm"],
+          ["10 cm", "6 cm"],
+          [localized("diàmetre 14 cm", "diameter 14 cm", "diámetro 14 cm"), "π = 22/7"],
+          [localized("radi 7 cm", "radius 7 cm", "radio 7 cm"), localized("diàmetre 14 cm", "diameter 14 cm", "diámetro 14 cm"), localized("arc 22 cm", "arc 22 cm", "arco 22 cm")],
+          [localized("radi 14 cm", "radius 14 cm", "radio 14 cm"), localized("arc 22 cm", "arc 22 cm", "arco 22 cm")],
+          ["10 cm", "4 cm", "4 cm", "5 cm", "6 cm", "9 cm"],
+          ["15 × 2,4 cm"],
+          ["4 cm", "7 cm", "10 cm", "13 cm", "16 cm", "19 cm", "22 cm", "25 cm"],
+          ["30 cm", "18 cm", "3 cm", "2 cm", "6 cm", "4 cm"],
+          ["14 cm", "7 cm", "arc 22 cm"]
+        ];
         const order = [1, 0, 8, 6, 2, 3, 5, 4, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29];
         const puzzle = puzzles[order[level - 1]];
         const challenge = {
           prompt: translateValue("Calcula el perímetre del dibuix."),
           diagram: "geometry",
           geometryLevel: order[level - 1] + 1,
-          diagramText: puzzle.prompt,
+          diagramMeasurements: diagramMeasurements[order[level - 1]],
           answer: String(puzzle.answer)
         };
         if (level <= 3) {
