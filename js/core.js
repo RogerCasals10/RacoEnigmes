@@ -443,6 +443,7 @@
 
     function showGame(gameId, fromRandom = false) {
       if (currentCategory === "arithmetic" && gameId !== "arithmetic") clearArithmeticTimer();
+      document.getElementById("reset-app").hidden = true;
       tabs.forEach((item) => item.setAttribute("aria-pressed", String(item.dataset.panel === gameId)));
       const panelId = EXTRA_GAME_IDS.includes(gameId) ? "panel-extra" : `panel-${gameId}`;
       panels.forEach((panel) => { panel.hidden = panel.id !== panelId; });
@@ -783,6 +784,7 @@
     }));
     document.getElementById("choose-game").addEventListener("click", () => {
       currentCategory = "";
+      document.getElementById("reset-app").hidden = false;
       tabs.forEach((tab) => tab.setAttribute("aria-pressed", "false"));
       document.getElementById("game-toolbar").hidden = true;
       document.querySelector(".hero").hidden = false;
